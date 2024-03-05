@@ -8,7 +8,7 @@ People in Australia are struggling with the cost of living, with 6.9 million peo
 * [Stakeholder Analysis](https://drive.google.com/drive/folders/16Fk5GEvlIE7s3ZnMaP0jKiCAEufOR10b)
 * [Team Charter](https://docs.google.com/document/d/1QBnvogKE8Pp49r557g3tUgP5Q6NA4VONkY6Wp5XuzSU/edit)
 * [Statement of Work](https://docs.google.com/document/d/15DaV9vaTk16sOiISfyb0Q1_RzQPGNPQjgIrBBuQJCPQ/edit#heading=h.ro1b544zf1ik)
-* [Meetings](https://drive.google.com/drive/folders/13kFbODhwJJi3NcAcGsy0AlrFoZ9HVNji)
+* [Meetings](https://github.com/orgs/JoyfulTechLauncher/projects/2)
 * [USM](https://drive.google.com/drive/folders/1ZVrZzcNDNtK1ZbQ1TdpI1iBXS7cmvGPU)
 * [App Prototype](https://www.figma.com/file/1hroIDfrGIPnQ1IOJhitDR/Joyful?type=whiteboard&node-id=0%3A1&t=K8jXsTMvo878ffPz-1)
 * [Feedback and Reflection](https://github.com/orgs/JoyfulTechLauncher/projects/3/views/1)
