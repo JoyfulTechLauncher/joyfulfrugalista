@@ -2,11 +2,12 @@
 ## Project Overview
 People in Australia are struggling with the cost of living, with 6.9 million people - one in 2 workers - living from pay day to pay day. One in five people are experiencing extreme effects on their mental health due to the rising cost of living, with young people in particular struggling. One reason people struggle is that they don't have the skills to save money, or they think it's pointless because the little savings don't make a difference.
 ## Related Documents
-* [Audit 1 materials](https://drive.google.com/drive/folders/1ET56hcYeZS0nV2rBhtaGc6o5b1gKvWeQ?usp=sharing)
-* [Google Drive](https://drive.google.com/drive/folders/162Vg0l1zu-mZ1z46vobN_2e0RCZNDJbO?usp=sharing)
-* [Decision Log](https://docs.google.com/spreadsheets/d/1bccDB16n_HQfHB7JKG_m7BZy8661KqGke5vDiOwWtYc/edit?usp=sharing)
-* [Reflection Log](https://docs.google.com/spreadsheets/d/1UQ0PI06EAj0GC9HWvPOAT4BvO9s57jtC/edit?usp=sharing&ouid=102379226429348350894&rtpof=true&sd=true)
-* [Handover Doc](https://docs.google.com/document/d/1YZrJK5xcn4Gp1iEAHEqlIAOfD_yojc8Z/edit)
-* [Notion](https://abrupt-crafter-012.notion.site/The-Joyful-Fashionista-Project-28a399f9c3644bad94603b3b4c4c8516)
-* [Prototype](https://rp.mockplus.com/editor/4ppAmrHnAq/gSKcGrjtMl)--[MockPlus](https://www.mockplus.com/) 
+* [Audit 1 materials](https://drive.google.com/drive/folders/1uhbzo5p_Y72GNwpHc4QBnkkmJ4plxSHj)
+* [Google Drive](https://drive.google.com/drive/folders/162Vg0l1zu-mZ1z46vobN_2e0RCZNDJbO)
+* [Decision Log](https://docs.google.com/spreadsheets/d/1fcTzaX-SSNPNT-svapF-rJPU6JKwf0BjD5lQST3DT9I/edit#gid=0)
+* [Feedback and Reflection](https://github.com/orgs/JoyfulTechLauncher/projects/3/views/1)
+* [Risk Assessment](https://docs.google.com/spreadsheets/d/1n0kw158m0MkryFvkjQldLQW3_caMcLVH/edit#gid=1771899963)
+* [Stakeholder Analysis](https://drive.google.com/drive/folders/16Fk5GEvlIE7s3ZnMaP0jKiCAEufOR10b)
+* [USM](https://drive.google.com/drive/folders/1ZVrZzcNDNtK1ZbQ1TdpI1iBXS7cmvGPU)
+* [Prototype](https://www.figma.com/file/1hroIDfrGIPnQ1IOJhitDR/Joyful?type=whiteboard&node-id=0%3A1&t=K8jXsTMvo878ffPz-1)
 ## Get Started
