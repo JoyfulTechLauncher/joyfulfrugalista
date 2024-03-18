@@ -6,7 +6,7 @@ function ButtonsSet() {
       <PrimaryButton>Detail</PrimaryButton>
       <PrimaryButton>Summary</PrimaryButton>
       <PrimaryButton>Community</PrimaryButton>
-      <PrimaryButton>Prosfile</PrimaryButton>
+      <PrimaryButton>Profile</PrimaryButton>
     </View>
   );
 }

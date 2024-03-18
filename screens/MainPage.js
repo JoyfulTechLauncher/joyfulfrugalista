@@ -1,16 +1,16 @@
 import { TextInput, View, StyleSheet, Alert } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import PrimaryButton from "../components/PrimaryButton";
 import MenuButton from "../components/PrimaryButton";
 import ButtonsSet from "../components/ButtonsSet";
+import MyTabs from "../components/MyTabs";
 
 function MainPage() {
   return (
-    <View>
-      <View style={styles.upper}></View>
-      <View style={styles.bottom}>
-        <ButtonsSet />
-      </View>
-    </View>
+    <NavigationContainer>
+      <MyTabs />
+    </NavigationContainer>
   );
 }
 
