@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   container: {
       flex: 1,
       justifyContent: 'center',
-      alignItems: 'stretch', // This will center the logo horizontally
+      alignItems: 'stretch',
       padding: 20,
       backgroundColor: '#fff',
     },
@@ -62,45 +62,45 @@ const styles = StyleSheet.create({
   logoText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff', // Logo text is probably white
+    color: '#fff',
   },
   title: {
-    fontSize: 26, // Slightly larger title
-    fontWeight: 'bold', // Bold title text
-    marginBottom: 30, // Increase spacing
-    alignSelf: 'left',
-    color: '#2d144b', // Assuming a dark title color
+    fontSize: 26,
+    fontWeight: 'bold',
+    marginBottom: 30,
+    textAlign: 'left',
+    color: '#2d144b',
   },
   input: {
-    height: 50, // Larger touch area
-    borderColor: '#d3d3d3', // Lighter border color
+    height: 50,
+    borderColor: '#d3d3d3',
     borderWidth: 1,
     marginBottom: 20,
-    paddingHorizontal: 15, // More padding inside
-    borderRadius: 10, // Rounded borders
+    paddingHorizontal: 15,
+    borderRadius: 10,
   },
   button: {
-    backgroundColor: '#673AB7', // Button background color
-    paddingVertical: 15, // Slightly larger button
-    borderRadius: 10, // Rounded borders
+    backgroundColor: '#673AB7',
+    paddingVertical: 15,
+    borderRadius: 10,
     alignItems: 'center',
-    marginBottom: 10, // Spacing after button
+    marginBottom: 10,
   },
   buttonText: {
-    color: '#fff', // Text color is white
+    color: '#fff',
     fontSize: 18,
   },
   forgotPassword: {
-    color: '#673AB7', // Match sign-in button color
-    fontSize: 16, // Slightly larger font
+    color: '#673AB7',
+    fontSize: 16,
     marginTop: 10,
-    alignSelf: 'center', // Center align text
+    alignSelf: 'center',
   },
   signUp: {
-    color: '#673AB7', // Match sign-in button color
-    fontSize: 16, // Slightly larger font
+    color: '#673AB7',
+    fontSize: 16,
     marginTop: 10,
-    alignSelf: 'center', // Center align text
+    alignSelf: 'center',
   },
 });
 
