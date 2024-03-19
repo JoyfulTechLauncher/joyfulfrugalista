@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import CategoryButton from './categoryButton';
-import CalculatorButton from './calculatorButton';
+import CategoryButton from '../components/categoryButton';
+import CalculatorButton from '../components/calculatorButton';
 
 const App = () => {
   const [inputValue, setInputValue] = useState('0.00');
