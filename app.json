@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "my-new-project",
-    "slug": "my-new-project",
+    "name": "Joyful24",
+    "slug": "Joyful24",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,7 +18,7 @@
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
+      "adaptiveIcon": 
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
