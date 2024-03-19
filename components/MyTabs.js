@@ -33,6 +33,9 @@ function MyTabs() {
           tabBarIcon: ({ color, size }) => (
             <Octicons name="note" color="white" size={size} />
           ),
+          tabBarLabelStyle: {
+            color: "white",
+          },
         }}
       />
       <Tab.Screen
@@ -42,6 +45,9 @@ function MyTabs() {
           tabBarIcon: ({ color, size }) => (
             <Fontisto name="bar-chart" size={21} color="white" />
           ),
+          tabBarLabelStyle: {
+            color: "white",
+          },
         }}
       />
       <Tab.Screen
@@ -51,6 +57,9 @@ function MyTabs() {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome6 name="user-group" size={21} color="white" />
           ),
+          tabBarLabelStyle: {
+            color: "white",
+          },
         }}
       />
       <Tab.Screen
@@ -60,6 +69,9 @@ function MyTabs() {
           tabBarIcon: ({ color, size }) => (
             <Entypo name="v-card" size={24} color="white" />
           ),
+          tabBarLabelStyle: {
+            color: "white",
+          },
         }}
       />
     </Tab.Navigator>
