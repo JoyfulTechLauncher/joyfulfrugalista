@@ -112,8 +112,6 @@ const labels = Array.from({ length: 6 }, (_, i) => `${i * 5 + 1}`);
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Summary</Text>
-
       <View style={styles.timePeriodSelector}>
         <TouchableOpacity style={styles.topbuttonStyle} onPress={() => setTimePeriod('weekly')}>
           <Text style={styles.topbuttonText}>Weekly</Text>

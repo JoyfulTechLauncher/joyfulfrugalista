@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
 
-const housingIcon = require('./assets/housing.png');
+const housingIcon = require('../assets/housing.png');
 
 const CategoryButton = ({ iconName, title, onPress, color }) => {
   const buttonStyles = [styles.button, { backgroundColor: color }];
