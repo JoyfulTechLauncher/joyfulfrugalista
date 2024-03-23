@@ -30,16 +30,16 @@ const App = () => {
   };
 
   const categories = [
-    { id: 'Housing', title: 'Housing', iconName: require('./assets/housing.png'), color: '#D0C6E1' },
-    { id: 'Household', title: 'Household', iconName: require('./assets/household.png'), color: '#F1EBF2' },
-    { id: 'Utilities', title: 'Utilities', iconName: require('./assets/utilities.png'), color: '#C4D3EB' },
-    { id: 'Transport', title: 'Transport', iconName: require('./assets/transport.png'), color: '#D0ECF3' },
-    { id: 'Food', title: 'Food', iconName: require('./assets/food.png'), color: '#BCE1D6' },
-    { id: 'Health', title: 'Health', iconName: require('./assets/health.png'), color: '#C5E1BA' },
-    { id: 'Education', title: 'Education', iconName: require('./assets/education.png'), color: '#F5C4DB' },
-    { id: 'Appearance', title: 'Appearance', iconName: require('./assets/appearance.png'), color: '#F7E8E4' },
-    { id: 'Lifestyle', title: 'Lifestyle', iconName: require('./assets/lifestyle.png'), color: '#F4EB85' },
-    { id: 'Service Fee', title: 'Service Fee', iconName: require('./assets/service fee.png'), color: '#FFD6A1' },
+    { id: 'Housing', title: 'Housing', iconName: require('../assets/housing.png'), color: '#D0C6E1' },
+    { id: 'Household', title: 'Household', iconName: require('../assets/household.png'), color: '#F1EBF2' },
+    { id: 'Utilities', title: 'Utilities', iconName: require('../assets/utilities.png'), color: '#C4D3EB' },
+    { id: 'Transport', title: 'Transport', iconName: require('../assets/transport.png'), color: '#D0ECF3' },
+    { id: 'Food', title: 'Food', iconName: require('../assets/food.png'), color: '#BCE1D6' },
+    { id: 'Health', title: 'Health', iconName: require('../assets/health.png'), color: '#C5E1BA' },
+    { id: 'Education', title: 'Education', iconName: require('../assets/education.png'), color: '#F5C4DB' },
+    { id: 'Appearance', title: 'Appearance', iconName: require('../assets/appearance.png'), color: '#F7E8E4' },
+    { id: 'Lifestyle', title: 'Lifestyle', iconName: require('../assets/lifestyle.png'), color: '#F4EB85' },
+    { id: 'Service Fee', title: 'Service Fee', iconName: require('../assets/service fee.png'), color: '#FFD6A1' },
     // maybe need more info
   ];
 
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   navBar: {
     paddingTop: 50,
     paddingBottom: 10,
-    backgroundColor: '#6200EE',
+    backgroundColor: '#2d144b',
   },
   navTitle: {
     color: '#ffffff',
