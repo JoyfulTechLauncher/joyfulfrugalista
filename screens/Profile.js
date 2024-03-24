@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View } from 'react-native';
+import { View, Button } from 'react-native';
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Image } from 'react-native';
 
@@ -49,12 +49,14 @@ const styles = StyleSheet.create({
         padding: 10,
         margin: 5,
         alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: '#eb6c9c',
         borderRadius: 5,
+        width: '50%',
     },
     buttonContainer: {
         position: 'absolute',
-        bottom: 400,
+        bottom: 460,
         left: 10,
         right: 10,
         flexDirection: 'row',
@@ -80,6 +82,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 14,
         marginTop: 4,
+        textAlign: 'center',
     },
     row: {
         flexDirection: 'row',
@@ -170,22 +173,32 @@ function Profile({ navigation }) {
                           <Text style={styles.buttonText}>Gamification</Text>
                       </TouchableOpacity>
                   </View>
+                  <View style={styles.row}>
+                      <TouchableOpacity
+                          style={styles.button}
+                          onPress={() => navigation.navigate('Login')}
+                      >
+                          <Text style={styles.buttonText}>Login</Text>
+                      </TouchableOpacity>
+                  </View>
               </View>
+
+
 
 
           </ScrollView>
       </SafeAreaView>
 
 
+    // <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    //     <Button
+    //         title="Login"
+    //         onPress={() => navigation.navigate('Login')}
+    //     />
+    // </View>
 
 
 
-        // <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        //   <Button
-        //     title="Login"
-        //     onPress={() => navigation.navigate('Login')}
-        //   />
-        // </View>
 
   );
 }
