@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import CategoryButton from '../components/categoryButton';
 import CalculatorButton from '../components/calculatorButton';
 
@@ -45,40 +45,43 @@ const App = () => {
 
   return (
     <View style={styles.container}>
-      {/* Top navigation bar */}
-      <View style={styles.navBar}>
-        <Text style={styles.navTitle}>Add</Text>
-      </View>
+      {/* Add scroll */}
+      <ScrollView style={styles.scrollView}>
+        {/* Top navigation bar */}
+        {/* <View style={styles.navBar}>
+          <Text style={styles.navTitle}>Add</Text>
+        </View> */}
 
-      {/* Category buttons */}
-      <View style={styles.categoryContainer}>
-        {categories.map((category) => (
-          <CategoryButton
-            key={category.id}
-            iconName={category.iconName}
-            title={category.title}
-            onPress={() => handleCategoryPress(category.id)}
-            color={category.color}
-          />
-        ))}
-      </View>
+        {/* Category buttons */}
+        <View style={styles.categoryContainer}>
+          {categories.map((category) => (
+            <CategoryButton
+              key={category.id}
+              iconName={category.iconName}
+              title={category.title}
+              onPress={() => handleCategoryPress(category.id)}
+              color={category.color}
+            />
+          ))}
+        </View>
 
-      {/* Display for the input value */}
-      <Text style={styles.inputDisplay}>{inputValue}</Text>
+        {/* Display for the input value */}
+        <Text style={styles.inputDisplay}>{inputValue}</Text>
 
-      {/* Description input */}
-      <TextInput style={styles.descriptionInput} placeholder="Description" />
+        {/* Description input */}
+        <TextInput style={styles.descriptionInput} placeholder="Description" />
 
-      {/* Numeric keypad */}
-      <View style={styles.keypad}>
-        {calculatorButtons.map((button) => (
-          <CalculatorButton
-            key={button}
-            label={button}
-            onPress={handleButtonPress}
-          />
-        ))}
-      </View>
+        {/* Numeric keypad */}
+        <View style={styles.keypad}>
+          {calculatorButtons.map((button) => (
+            <CalculatorButton
+              key={button}
+              label={button}
+              onPress={handleButtonPress}
+            />
+          ))}
+        </View>
+      </ScrollView>
     </View>
   );
 };
