@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet,View, Text, TouchableOpacity, Image} from "react-native";
+import { StyleSheet,View, Text, TouchableOpacity, Image, Platform} from "react-native";
 import React, { useState } from 'react';
-
+import { ScrollView } from 'react-native-gesture-handler';
 
 function Detail({ navigation }) {
 
@@ -30,14 +30,91 @@ function Detail({ navigation }) {
     return dataType === data ? styles.activeButtonText : styles.buttonText;
   };
 
+  const monthlyBudget = 1000; // Example monthly budget
+  const currentExpenses = 750; // Example current expenses
+
+  // Calculate the progress (percentage of expenses relative to budget)
+  const progress = currentExpenses / monthlyBudget;
+
   const loadData = () => {
     switch (dataType) {
       case 'saving':
-        return <Text>Saving Page Content</Text>;
+        return (
+          <View>
+            <View style={styles.board}>
+              <Text style={styles.boardLabel}>You have saved</Text>
+              <Text style={styles.amount}>$300</Text>
+            </View>
+            <ScrollView style={styles.scrollView}>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dateText}>{getDate(0)}</Text>
+                <View style={styles.data}>
+                  <Image source={require('../assets/housing.png')} style={styles.dataIcon}/>
+                  <View style={styles.dataText}>
+                    <Text style={styles.dataLabel}>Description</Text>
+                    <Text style={styles.dataAmount}>$30</Text>
+                  </View>
+                </View>
+                <View style={styles.data}>
+                  <Image source={require('../assets/food.png')} style={styles.dataIcon}/>
+                  <View style={styles.dataText}>
+                    <Text style={styles.dataLabel}>Description</Text>
+                    <Text style={styles.dataAmount}>$40</Text>
+                  </View>
+                </View>
+              </View>
+            </ScrollView>
+          </View>
+        );
       case 'expense':
-        return <Text>Expense Page Content</Text>;
+        return (
+          <View>
+          <View style={styles.board}>
+              <Text style={styles.boardLabel}>You have spent</Text>
+              <Text style={styles.amount}>$350</Text>
+          </View>
+          <ScrollView style={styles.scrollView}>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dateText}>{getDate(0)}</Text>
+              <View style={styles.data}>
+                <Image source={require('../assets/education.png')} style={styles.dataIcon}/>
+                <View style={styles.dataText}>
+                  <Text style={styles.dataLabel}>Description</Text>
+                  <Text style={styles.dataAmount}>$500</Text>
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+        </View>
+        );
       case 'income':
-        return <Text>Income Page Content</Text>;
+        return (
+          <View>
+          <View style={styles.board}>
+              <Text style={styles.boardLabel}>You have earned</Text>
+              <Text style={styles.amount}>$1400</Text>
+          </View>
+          <ScrollView style={styles.scrollView}>
+            <View style={styles.dataContainer}>
+              <Text style={styles.dateText}>{getDate(0)}</Text>
+              <View style={styles.data}>
+                <Image source={require('../assets/household.png')} style={styles.dataIcon}/>
+                <View style={styles.dataText}>
+                  <Text style={styles.dataLabel}>Description</Text>
+                  <Text style={styles.dataAmount}>$800</Text>
+                </View>
+              </View>
+              <View style={styles.data}>
+                <Image source={require('../assets/education.png')} style={styles.dataIcon}/>
+                <View style={styles.dataText}>
+                  <Text style={styles.dataLabel}>Description</Text>
+                  <Text style={styles.dataAmount}>$900</Text>
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+        </View>
+        );
       default:
         return null;
     }
@@ -49,7 +126,7 @@ function Detail({ navigation }) {
   };
 
   const handleNext = () => {
-    setDateIndex(dateIndex + 1);
+    setDateIndex(Math.min(0, dateIndex + 1));
   };
 
 
@@ -100,16 +177,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   navButton: {
-    padding: 10,
+    paddingVertical: 3,
+    paddingHorizontal: 15,
     backgroundColor: '#603a6b',
   },
   navButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 'bold',
   },
   dateText: {
-    fontSize: 16,
+    fontSize: 15,
     color: '#2d144b',
   },
   mainButtons: {
@@ -128,7 +206,7 @@ const styles = StyleSheet.create({
   },
   activeButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 15,
   },
   button: {
     flex: 1,
@@ -140,7 +218,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#2d144b',
-    fontSize: 16,
+    fontSize: 15,
   },
   content: {
     flex: 1,
@@ -153,9 +231,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-    width: 70,
-    height: 70,
-    borderRadius: 40,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     backgroundColor: '#f2c875',
     justifyContent: 'center',
     alignItems: 'center',
@@ -163,6 +241,56 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: '#2d144b',
     fontSize: 30,
+  },
+  board: {
+    backgroundColor: '#f2c875',
+    padding: 5,
+    borderRadius: 10,
+    margin: 10,
+    alignItems: 'center',
+    height: 120,
+  },
+  boardLabel: {
+    color: '#2d144b',
+    lineHeight: 50,
+  },
+  amount: {
+    color: '#2d144b',
+    lineHeight: 35,
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  dataContainer: {
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+  },
+  data: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    backgroundColor: '#F1EBF2',
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 5,
+    height: 50,
+  },
+  dataIcon: {
+    height: 30,
+    width: 30,
+    margin: 10,
+  },
+  dataText: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  dataLabel: {
+    color: '#2d144b',
+    fontSize: 15,
+  },
+  dataAmount: {
+    color: '#2d144b',
+    fontSize: 15,
+    
   }
 });
 
