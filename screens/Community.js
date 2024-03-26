@@ -35,7 +35,7 @@ const ForumPosts = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Community</Text>
+        <Text style={styles.headerText}> </Text>
       </View>
       <View style={styles.menu}>
         <TouchableOpacity style={[styles.menuButton, styles.activeMenuButton]}>
@@ -59,10 +59,10 @@ const ForumPosts = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#261574',
+    backgroundColor: '#2d144b',
   },
   header: {
-    backgroundColor: '#261574',
+    backgroundColor: '#2d144b',
     padding: 20,
     alignItems: 'center',
   },
