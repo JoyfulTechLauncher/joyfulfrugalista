@@ -1,9 +1,25 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../components/firebaseConfig';
 
-const Login = () => {
+
+const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const handleLogin = () => {
+    // 使用 signInWithEmailAndPassword 函数进行认证
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // 登录成功，导航到 MainPage
+        navigation.navigate('MyTabs');
+      })
+      .catch((error) => {
+        // 登录失败
+        Alert.alert("登录失败", error.message);
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -26,7 +42,7 @@ const Login = () => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Sign in</Text>
       </TouchableOpacity>
 
