@@ -9,15 +9,14 @@ const Login = ({ navigation }) => {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    // 使用 signInWithEmailAndPassword 函数进行认证
+
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // 登录成功，导航到 MainPage
+
         navigation.navigate('MyTabs');
       })
       .catch((error) => {
-        // 登录失败
-        Alert.alert("登录失败", error.message);
+        Alert.alert("Login failed", error.message);
       });
   };
 

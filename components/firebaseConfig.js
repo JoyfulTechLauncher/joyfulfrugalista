@@ -2,7 +2,6 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBDlfjFF6-T3HoxQJR5vHsV9BSSPSeXmYE",
   authDomain: "joyful-429b0.firebaseapp.com",
