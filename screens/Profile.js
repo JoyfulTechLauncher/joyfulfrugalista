@@ -4,6 +4,12 @@ import { View, Button } from 'react-native';
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Image } from 'react-native';
 
+const colors ={
+    //buttonColor: '#eb6c9c',
+    buttonColor: '#f2c875',
+    textColor: '#2d144b',
+}
+
 const styles = StyleSheet.create({
 
     container: {
@@ -32,10 +38,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#f2c875',
         alignItems: 'center',
         margin: 10,
+        borderRadius: 10,
     },
     userNameText: {
         color: 'white',
         fontSize: 18,
+    },
+    savingGoalText: {
+        color: colors.textColor,
+        fontSize: 22,
     },
     detailRow: {
         flexDirection: 'row',
@@ -50,19 +61,20 @@ const styles = StyleSheet.create({
         margin: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#eb6c9c',
+        backgroundColor: colors.buttonColor,
         borderRadius: 5,
         width: '50%',
     },
     buttonContainer: {
         position: 'absolute',
-        bottom: 460,
+        bottom: 410,
         left: 10,
         right: 10,
+        zIndex: 1,
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        backgroundColor: '#eb6c9c',
+        backgroundColor: colors.buttonColor,
         borderRadius: 20,
         paddingVertical: 5,
     },
@@ -79,7 +91,7 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     buttonText: {
-        color: 'white',
+        color: colors.textColor,
         fontSize: 14,
         marginTop: 4,
         textAlign: 'center',
@@ -109,8 +121,11 @@ function Profile({ navigation }) {
 
                       <Text style={styles.userNameText}>Tester Tester</Text>
                       <View style={{ flex: 1 }} />
-                      <TouchableOpacity>
-                          <Text style={styles.userNameText}>✏️Edit</Text>
+                      <TouchableOpacity
+                          style={styles.transparentButton}
+                          onPress={() => navigation.navigate('Login')}
+                      >
+                          <Text style={styles.userNameText}>Login</Text>
                       </TouchableOpacity>
                   </View>
               </View>
@@ -138,7 +153,7 @@ function Profile({ navigation }) {
 
               <View style={styles.banner}>
                   <Text style={styles.buttonText}>Your Monthly Saving Goal</Text>
-                  <Text style={styles.userNameText}>$400</Text>
+                  <Text style={styles.savingGoalText}>$400</Text>
               </View>
 
               <View style={styles.detailRow}>
@@ -167,18 +182,10 @@ function Profile({ navigation }) {
                   </View>
                   <View style={styles.row}>
                       <TouchableOpacity style={styles.button}>
-                          <Text style={styles.buttonText}>Financial Records</Text>
+                          <Text style={styles.buttonText}>Reports</Text>
                       </TouchableOpacity>
                       <TouchableOpacity style={styles.button}>
                           <Text style={styles.buttonText}>Gamification</Text>
-                      </TouchableOpacity>
-                  </View>
-                  <View style={styles.row}>
-                      <TouchableOpacity
-                          style={styles.button}
-                          onPress={() => navigation.navigate('Login')}
-                      >
-                          <Text style={styles.buttonText}>Login</Text>
                       </TouchableOpacity>
                   </View>
               </View>
