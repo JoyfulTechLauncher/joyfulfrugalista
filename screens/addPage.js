@@ -9,21 +9,52 @@ const App = () => {
   const [operator, setOperator] = useState(null);
 
   // Add the logic for handling button press
+  // const handleButtonPress = (value) => {
+  //   if (value === 'Back') {
+  //     setInputValue(inputValue.slice(0, -1) || '0');
+  //   } else if (value === 'Done') {
+  //     if (!operator) return;
+  //     const result = calculate(parseFloat(previousValue), parseFloat(inputValue), operator);
+  //     setInputValue(String(result));
+  //     setPreviousValue(null);
+  //     setOperator(null);
+  //   } else if (['+', '-'].includes(value)) {
+  //     setOperator(value);
+  //     setPreviousValue(inputValue);
+  //     setInputValue('0');
+  //   } else if (value === 'Date'){
+  //     // handle the date button
+  //   } else {
+  //     setInputValue(inputValue === '0' ? String(value) : inputValue + value);
+  //   }
+  // };
   const handleButtonPress = (value) => {
     if (value === 'Back') {
       setInputValue(inputValue.slice(0, -1) || '0');
+    } else if (value === 'C') {
+      // Clear all states to start fresh
+      setInputValue('0');
+      setPreviousValue(null);
+      setOperator(null);
     } else if (value === 'Done') {
-      if (!operator) return;
+      if (!operator || previousValue === null) return;
       const result = calculate(parseFloat(previousValue), parseFloat(inputValue), operator);
       setInputValue(String(result));
       setPreviousValue(null);
       setOperator(null);
     } else if (['+', '-'].includes(value)) {
-      setOperator(value);
-      setPreviousValue(inputValue);
-      setInputValue('0');
+      if (operator && previousValue !== null) {
+        const result = calculate(parseFloat(previousValue), parseFloat(inputValue), operator);
+        setInputValue('0');
+        setPreviousValue(String(result));
+        setOperator(value);
+      } else {
+        setOperator(value);
+        setPreviousValue(inputValue);
+        setInputValue('0');
+      }
     } else if (value === 'Date'){
-      // handle the date button
+        // handle the date button
     } else {
       setInputValue(inputValue === '0' ? String(value) : inputValue + value);
     }
