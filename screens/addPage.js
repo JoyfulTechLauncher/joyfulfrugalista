@@ -4,25 +4,51 @@ import CategoryButton from '../components/categoryButton';
 import CalculatorButton from '../components/calculatorButton';
 
 const App = () => {
-  const [inputValue, setInputValue] = useState('0.00');
+  const [inputValue, setInputValue] = useState('0');
+  const [previousValue, setPreviousValue] = useState(null);
+  const [operator, setOperator] = useState(null);
 
   // Add the logic for handling button press
   const handleButtonPress = (value) => {
-    // Update the inputValue state based on the button pressed
-    if (!isNaN(value)) {
-      setInputValue((prevInputValue) => prevInputValue === '0.00' ? value : prevInputValue + value);
+    if (value === 'Back') {
+      setInputValue(inputValue.slice(0, -1) || '0');
+    } else if (value === 'Done') {
+      if (!operator) return;
+      const result = calculate(parseFloat(previousValue), parseFloat(inputValue), operator);
+      setInputValue(String(result));
+      setPreviousValue(null);
+      setOperator(null);
+    } else if (['+', '-'].includes(value)) {
+      setOperator(value);
+      setPreviousValue(inputValue);
+      setInputValue('0');
+    } else if (value === 'Date'){
+      // handle the date button
     } else {
-      // calculator logic, need to be modified
-      setInputValue((prevInputValue) => prevInputValue + value);
+      setInputValue(inputValue === '0' ? String(value) : inputValue + value);
+    }
+  };
+
+  const calculate = (a, b, operator) => {
+    switch(operator) {
+      case '+': return a + b;
+      case '-': return a - b;
+      default: return b;
     }
   };
 
   const calculatorButtons = [
-    '7', '8', '9', 'Cal',
-    '4', '5', '6', '+',
-    '1', '2', '3', '-',
-    '.', '0', 'C', 'ADD'
-  ]
+    { label: '7', type: 'number' }, { label: '8', type: 'number' }, { label: '9', type: 'number' }, 
+    // { label: 'Date', type: 'date' },
+    { label: 'Date', type: 'date', imageSource: require('../assets/cal.png') },
+    { label: '4', type: 'number' }, { label: '5', type: 'number' }, { label: '6', type: 'number' }, { label: '+', type: 'operator' },
+    { label: '1', type: 'number' }, { label: '2', type: 'number' }, { label: '3', type: 'number' }, { label: '-', type: 'operator' },
+    { label: '.', type: 'operator' }, { label: '0', type: 'number' },
+    // { label: 'Back', type: 'backspace' }, 
+    // { label: 'Done', type: 'done' }
+    { label: 'Back', type: 'backspace', imageSource: require('../assets/backspace.png') },
+    { label: 'Done', type: 'done', imageSource: require('../assets/add.png') },
+  ];
 
   const handleCategoryPress = (category) => {
     // press event logic
@@ -75,9 +101,11 @@ const App = () => {
         <View style={styles.keypad}>
           {calculatorButtons.map((button) => (
             <CalculatorButton
-              key={button}
-              label={button}
+              key={button.label}
+              label={button.label}
               onPress={handleButtonPress}
+              type={button.type}
+              imageSource={button.imageSource}
             />
           ))}
         </View>
@@ -109,20 +137,28 @@ const styles = StyleSheet.create({
     // Additional styles needed
   },
   inputDisplay: {
-    backgroundColor: '#eee',
-    fontSize: 36,
-    padding: 20,
+    backgroundColor: '#29144A',
+    color: '#FFFFFF',
+    fontSize: 30,
+    padding: 10,
     textAlign: 'right',
   },
   descriptionInput: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: '#29144A',
     borderWidth: 1,
-    margin: 20,
+    margin: 10,
+    color: '#FFFFFF',
+    padding: 20,
+    marginHorizontal: 20, 
+    borderRadius: 10,
   },
   keypad: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent: 'space-between', // Ensures spacing between buttons horizontally
+    padding: 10,
+    backgroundColor: '#29144A',
     // Additional styles needed
   },
   button: {
