@@ -10,6 +10,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from '@react-navigation/stack';
 import Login from './screens/Login';
 import AddPage from './screens/addPage';
+import ProfileEdit from './screens/ProfileEdit';
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,8 @@ function AppNavigator() {
       <Stack.Screen name="MyTabs" component={MyTabs} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="AddPage" component={AddPage} />
+      <Stack.Screen name="ProfileEdit" component={ProfileEdit} />
+
     </Stack.Navigator>
   );
 }
