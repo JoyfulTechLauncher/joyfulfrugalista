@@ -12,7 +12,8 @@ const Login = ({ navigation }) => {
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-
+        const uid = userCredential.user.uid;
+        console.log("User UID:", uid);
         navigation.navigate('MyTabs');
       })
       .catch((error) => {
