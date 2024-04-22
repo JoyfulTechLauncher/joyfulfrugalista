@@ -1,23 +1,21 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../components/firebaseConfig';
-var uid = -1;
 
-const Login = ({ navigation }) => {
+const Register = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-
-    signInWithEmailAndPassword(auth, email, password)
+  const handleRegister = () => {
+    createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        uid = userCredential.user.uid;
-        console.log("User UID:", uid);
-        navigation.navigate('MyTabs');
+        console.log("User UID:", userCredential.user.uid);
+        Alert.alert("Registration Successful", "You are now registered and logged in.");
+        navigation.navigate('MyTabs'); // Assuming you want to navigate to 'MyTabs' after registration
       })
       .catch((error) => {
-        Alert.alert("Login failed", error.message);
+        Alert.alert("Registration failed", error.message);
       });
   };
 
@@ -26,7 +24,7 @@ const Login = ({ navigation }) => {
       <View style={styles.logoContainer}>
         <Text style={styles.logoText}>Logo</Text>
       </View>
-      <Text style={styles.title}>Sign In</Text>
+      <Text style={styles.title}>Sign Up</Text>
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -42,15 +40,12 @@ const Login = ({ navigation }) => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Sign in</Text>
+      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+        <Text style={styles.buttonText}>Sign up</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity>
-        <Text style={styles.forgotPassword}>Forgot password</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Registry')}>
-        <Text style={styles.signUp}>Sign up</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.signUp}>Already have an account? Sign in</Text>
       </TouchableOpacity>
 
     </View>
@@ -59,22 +54,22 @@ const Login = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'stretch',
-      padding: 20,
-      backgroundColor: '#fff',
-    },
-    logoContainer: {
-      width: 160,
-      height: 160,
-      alignSelf: 'center',
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: 50,
-      backgroundColor: '#E91E63',
-      borderRadius: 80,
-    },
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'stretch',
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  logoContainer: {
+    width: 160,
+    height: 160,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 50,
+    backgroundColor: '#E91E63',
+    borderRadius: 80,
+  },
   logoText: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -106,12 +101,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
   },
-  forgotPassword: {
-    color: '#673AB7',
-    fontSize: 16,
-    marginTop: 10,
-    alignSelf: 'center',
-  },
   signUp: {
     color: '#673AB7',
     fontSize: 16,
@@ -120,5 +109,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-export default Login;
+export default Register;
