@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import MainPage from "./screens/MainPage";
 import MyTabs from './components/MyTabs';
 import Profile from "./screens/Profile"
-
+import Registry from "./screens/Registry"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from '@react-navigation/stack';
@@ -21,7 +21,7 @@ function AppNavigator() {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="AddPage" component={AddPage} />
       <Stack.Screen name="ProfileEdit" component={ProfileEdit} />
-
+      <Stack.Screen name="Registry" component={Registry} />
     </Stack.Navigator>
   );
 }
