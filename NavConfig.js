@@ -88,6 +88,7 @@ function MyStack() {
     <Stack.Navigator>
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="AddPage" component={AddPage} />
+      <Stack.Screen name="Summary" component={Summary} />
     </Stack.Navigator>
   );
 }
