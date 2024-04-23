@@ -20,7 +20,7 @@ const Login = ({ navigation }) => {
       .then((userCredential) => {
         uid = userCredential.user.uid;
         console.log("User UID:", uid);
-        navigation.navigate("MyStack", { screen: "Summary" });
+        navigation.navigate("Tab");
       })
       .catch((error) => {
         Alert.alert("Login failed", error.message);
