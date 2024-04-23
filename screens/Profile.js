@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Image } from "react-native";
 import auth from "@react-native-firebase/auth";
+import database from "@react-native-firebase/database";
 
 const colors = {
   //buttonColor: '#eb6c9c',
@@ -120,6 +121,7 @@ function Profile({ navigation }) {
     if (!user) {
       navigation.navigate("MyStack", { screen: "Login" });
     } else {
+      const userRef = database().ref;
     }
   }, []);
 
