@@ -64,25 +64,25 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: "row",
     padding: 10,
-    margin: 5,
+    marginHorizontal: 5,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.buttonColor,
     borderRadius: 5,
-    width: "50%",
+    width: "52%",
+
   },
   buttonContainer: {
-    position: "absolute",
-    bottom: 410,
-    left: 10,
-    right: 10,
-    zIndex: 1,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     backgroundColor: colors.buttonColor,
+    zIndex: 1,
     borderRadius: 20,
     paddingVertical: 5,
+    width: '95%',
+    alignSelf: 'center',
+    marginTop: -30,
   },
   transparentButton: {
     alignItems: "center",
@@ -108,8 +108,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   moreFunctionsContainer: {
-    marginLeft: 50,
-    marginRight: 50,
+    marginLeft: 45,
+    marginRight: 65,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
   },
 });
 
@@ -167,7 +170,7 @@ function Profile({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <View style={{ height: 40 }} />
+        {/*<View style={{ height: 10 }} />*/}
 
         <View style={styles.banner}>
           <Text style={styles.buttonText}>Your Monthly Saving Goal</Text>
