@@ -116,7 +116,11 @@ function AppNav() {
             component={MyTabs}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="MyStack" component={MyStack} />
+          <Stack.Screen
+            name="MyStack"
+            component={MyStack}
+            options={{ headerShown: false }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
