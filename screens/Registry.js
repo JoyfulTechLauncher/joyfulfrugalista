@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { auth } from '../components/firebaseConfig';
 
 const Register = ({ navigation }) => {
@@ -11,11 +11,24 @@ const Register = ({ navigation }) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         console.log("User UID:", userCredential.user.uid);
-        Alert.alert("Registration Successful", "You are now registered and logged in.");
+
+        sendVerificationEmail(userCredential.user);
+        Alert.alert("Registration Successful", "You are now registered. Please check your email to verify your account.");
         navigation.navigate('MyTabs'); // Assuming you want to navigate to 'MyTabs' after registration
       })
       .catch((error) => {
         Alert.alert("Registration failed", error.message);
+      });
+  };
+
+  const sendVerificationEmail = (user) => {
+    sendEmailVerification(user)
+      .then(() => {
+        console.log("Verification email sent.");
+      })
+      .catch((error) => {
+        console.error("Error sending verification email:", error);
+        Alert.alert("Verification Email Failed", "Failed to send verification email. Please try again later.");
       });
   };
 
@@ -47,7 +60,6 @@ const Register = ({ navigation }) => {
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
         <Text style={styles.signUp}>Already have an account? Sign in</Text>
       </TouchableOpacity>
-
     </View>
   );
 };
@@ -110,3 +122,4 @@ const styles = StyleSheet.create({
 });
 
 export default Register;
+
