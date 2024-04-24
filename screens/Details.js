@@ -1,16 +1,27 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet,View, Text, TouchableOpacity, Image, Platform} from "react-native";
-import React, { useState } from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
+import { StatusBar } from "expo-status-bar";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Platform,
+} from "react-native";
+import React, { useState } from "react";
+import { ScrollView } from "react-native-gesture-handler";
 
 function Detail({ navigation }) {
-
   const [dateIndex, setDateIndex] = useState(0);
-  const [dataType, setDataType] = useState('saving'); // 'saving', 'expense', 'income'
+  const [dataType, setDataType] = useState("saving"); // 'saving', 'expense', 'income'
 
   // Function to get today's date in the format: "March 23, 2024"
   const getDate = (dateIndex) => {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const options = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
     const currentDate = new Date();
     const targetDate = new Date(currentDate);
     targetDate.setDate(currentDate.getDate() + dateIndex);
@@ -38,7 +49,7 @@ function Detail({ navigation }) {
 
   const loadData = () => {
     switch (dataType) {
-      case 'saving':
+      case "saving":
         return (
           <View>
             <View style={styles.board}>
@@ -49,14 +60,20 @@ function Detail({ navigation }) {
               <View style={styles.dataContainer}>
                 <Text style={styles.dateText}>{getDate(0)}</Text>
                 <View style={styles.data}>
-                  <Image source={require('../assets/housing.png')} style={styles.dataIcon}/>
+                  <Image
+                    source={require("../assets/housing.png")}
+                    style={styles.dataIcon}
+                  />
                   <View style={styles.dataText}>
                     <Text style={styles.dataLabel}>Description</Text>
                     <Text style={styles.dataAmount}>$30</Text>
                   </View>
                 </View>
                 <View style={styles.data}>
-                  <Image source={require('../assets/food.png')} style={styles.dataIcon}/>
+                  <Image
+                    source={require("../assets/food.png")}
+                    style={styles.dataIcon}
+                  />
                   <View style={styles.dataText}>
                     <Text style={styles.dataLabel}>Description</Text>
                     <Text style={styles.dataAmount}>$40</Text>
@@ -66,54 +83,63 @@ function Detail({ navigation }) {
             </ScrollView>
           </View>
         );
-      case 'expense':
+      case "expense":
         return (
           <View>
-          <View style={styles.board}>
+            <View style={styles.board}>
               <Text style={styles.boardLabel}>You have spent</Text>
               <Text style={styles.amount}>$350</Text>
-          </View>
-          <ScrollView style={styles.scrollView}>
-            <View style={styles.dataContainer}>
-              <Text style={styles.dateText}>{getDate(0)}</Text>
-              <View style={styles.data}>
-                <Image source={require('../assets/education.png')} style={styles.dataIcon}/>
-                <View style={styles.dataText}>
-                  <Text style={styles.dataLabel}>Description</Text>
-                  <Text style={styles.dataAmount}>$500</Text>
+            </View>
+            <ScrollView style={styles.scrollView}>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dateText}>{getDate(0)}</Text>
+                <View style={styles.data}>
+                  <Image
+                    source={require("../assets/education.png")}
+                    style={styles.dataIcon}
+                  />
+                  <View style={styles.dataText}>
+                    <Text style={styles.dataLabel}>Description</Text>
+                    <Text style={styles.dataAmount}>$500</Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          </ScrollView>
-        </View>
+            </ScrollView>
+          </View>
         );
-      case 'income':
+      case "income":
         return (
           <View>
-          <View style={styles.board}>
+            <View style={styles.board}>
               <Text style={styles.boardLabel}>You have earned</Text>
               <Text style={styles.amount}>$1400</Text>
-          </View>
-          <ScrollView style={styles.scrollView}>
-            <View style={styles.dataContainer}>
-              <Text style={styles.dateText}>{getDate(0)}</Text>
-              <View style={styles.data}>
-                <Image source={require('../assets/household.png')} style={styles.dataIcon}/>
-                <View style={styles.dataText}>
-                  <Text style={styles.dataLabel}>Description</Text>
-                  <Text style={styles.dataAmount}>$800</Text>
-                </View>
-              </View>
-              <View style={styles.data}>
-                <Image source={require('../assets/education.png')} style={styles.dataIcon}/>
-                <View style={styles.dataText}>
-                  <Text style={styles.dataLabel}>Description</Text>
-                  <Text style={styles.dataAmount}>$900</Text>
-                </View>
-              </View>
             </View>
-          </ScrollView>
-        </View>
+            <ScrollView style={styles.scrollView}>
+              <View style={styles.dataContainer}>
+                <Text style={styles.dateText}>{getDate(0)}</Text>
+                <View style={styles.data}>
+                  <Image
+                    source={require("../assets/household.png")}
+                    style={styles.dataIcon}
+                  />
+                  <View style={styles.dataText}>
+                    <Text style={styles.dataLabel}>Description</Text>
+                    <Text style={styles.dataAmount}>$800</Text>
+                  </View>
+                </View>
+                <View style={styles.data}>
+                  <Image
+                    source={require("../assets/education.png")}
+                    style={styles.dataIcon}
+                  />
+                  <View style={styles.dataText}>
+                    <Text style={styles.dataLabel}>Description</Text>
+                    <Text style={styles.dataAmount}>$900</Text>
+                  </View>
+                </View>
+              </View>
+            </ScrollView>
+          </View>
         );
       default:
         return null;
@@ -129,145 +155,161 @@ function Detail({ navigation }) {
     setDateIndex(Math.min(0, dateIndex + 1));
   };
 
-
   return (
     <View style={styles.container}>
-    <View style={styles.header}>
-      <TouchableOpacity onPress={handlePrevious} style={styles.navButton}>
-        <Text style={styles.navButtonText}>{"<"}</Text>
-      </TouchableOpacity>
-      <Text style={styles.dateText}>{getDate(dateIndex)}</Text>
-      <TouchableOpacity onPress={handleNext} style={styles.navButton}>
-        <Text style={styles.navButtonText}>{">"}</Text>
-      </TouchableOpacity>
-    </View>
-
-    <View style={styles.mainButtons}>
-      <TouchableOpacity onPress={() => {handleDataChange('saving')}} style={getButtonStyle('saving')}>
-        <Text style={getButtonTextColor('saving')}>Saving</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => {handleDataChange('expense')}} style={getButtonStyle('expense')}>
-        <Text style={getButtonTextColor('expense')}>Expense</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => {handleDataChange('income')}} style={getButtonStyle('income')}>
-        <Text style={getButtonTextColor('income')}>Income</Text>
-      </TouchableOpacity>
-    </View>
-
-    <View style={styles.content}>
-        {loadData()}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={handlePrevious} style={styles.navButton}>
+          <Text style={styles.navButtonText}>{"<"}</Text>
+        </TouchableOpacity>
+        <Text style={styles.dateText}>{getDate(dateIndex)}</Text>
+        <TouchableOpacity onPress={handleNext} style={styles.navButton}>
+          <Text style={styles.navButtonText}>{">"}</Text>
+        </TouchableOpacity>
       </View>
-    <TouchableOpacity onPress={() => navigation.navigate('AddPage')} style={styles.addButton}>
+
+      <View style={styles.mainButtons}>
+        <TouchableOpacity
+          onPress={() => {
+            handleDataChange("saving");
+          }}
+          style={getButtonStyle("saving")}
+        >
+          <Text style={getButtonTextColor("saving")}>Saving</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            handleDataChange("expense");
+          }}
+          style={getButtonStyle("expense")}
+        >
+          <Text style={getButtonTextColor("expense")}>Expense</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            handleDataChange("income");
+          }}
+          style={getButtonStyle("income")}
+        >
+          <Text style={getButtonTextColor("income")}>Income</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.content}>{loadData()}</View>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("MyStack", { screen: "AddPage" })}
+        style={styles.addButton}
+      >
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
-  </View>
+    </View>
   );
-};
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    backgroundColor: '#2d144b',
+    backgroundColor: "#fff",
+    backgroundColor: "#2d144b",
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     margin: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   navButton: {
     paddingVertical: 3,
     paddingHorizontal: 15,
-    backgroundColor: '#603a6b',
+    backgroundColor: "#603a6b",
   },
   navButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 15,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   dateText: {
     fontSize: 15,
-    color: '#2d144b',
+    color: "#2d144b",
   },
   mainButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 10,
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
   activeButton: {
     flex: 1,
-    backgroundColor: '#603a6b',
+    backgroundColor: "#603a6b",
     paddingVertical: 10,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 5,
     marginHorizontal: 1,
   },
   activeButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 15,
   },
   button: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     paddingVertical: 10,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 5,
     marginHorizontal: 1,
   },
   buttonText: {
-    color: '#2d144b',
+    color: "#2d144b",
     fontSize: 15,
   },
   content: {
     flex: 1,
-    backgroundColor: '#fff',
-    width: '100%',
+    backgroundColor: "#fff",
+    width: "100%",
     marginTop: 10,
     marginBottom: 0,
   },
   addButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 20,
     right: 20,
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#f2c875',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#f2c875",
+    justifyContent: "center",
+    alignItems: "center",
   },
   addButtonText: {
-    color: '#2d144b',
+    color: "#2d144b",
     fontSize: 30,
   },
   board: {
-    backgroundColor: '#f2c875',
+    backgroundColor: "#f2c875",
     padding: 5,
     borderRadius: 10,
     margin: 10,
-    alignItems: 'center',
+    alignItems: "center",
     height: 120,
   },
   boardLabel: {
-    color: '#2d144b',
+    color: "#2d144b",
     lineHeight: 50,
   },
   amount: {
-    color: '#2d144b',
+    color: "#2d144b",
     lineHeight: 35,
     fontSize: 30,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   dataContainer: {
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingHorizontal: 10,
   },
   data: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    backgroundColor: '#F1EBF2',
+    alignItems: "center",
+    flexDirection: "row",
+    backgroundColor: "#F1EBF2",
     marginTop: 10,
     padding: 10,
     borderRadius: 5,
@@ -280,18 +322,17 @@ const styles = StyleSheet.create({
   },
   dataText: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   dataLabel: {
-    color: '#2d144b',
+    color: "#2d144b",
     fontSize: 15,
   },
   dataAmount: {
-    color: '#2d144b',
+    color: "#2d144b",
     fontSize: 15,
-    
-  }
+  },
 });
 
 export default Detail;
