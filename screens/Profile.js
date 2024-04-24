@@ -8,8 +8,6 @@ import {
   StyleSheet,
 } from "react-native";
 import { Image } from "react-native";
-import auth from "@react-native-firebase/auth";
-import database from "@react-native-firebase/database";
 
 const colors = {
   //buttonColor: '#eb6c9c',
@@ -117,17 +115,6 @@ const styles = StyleSheet.create({
 });
 
 function Profile({ navigation }) {
-  //only trigger when meet some conditions
-  useEffect(() => {
-    const user = auth().currentUser;
-
-    if (!user) {
-      navigation.navigate("MyStack", { screen: "Login" });
-    } else {
-      const userRef = database().ref;
-    }
-  }, []);
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -174,7 +161,6 @@ function Profile({ navigation }) {
 
         <View style={styles.banner}>
           <Text style={styles.buttonText}>Your Monthly Saving Goal</Text>
-          {/* need dynamically update */}
           <Text style={styles.savingGoalText}>$400</Text>
         </View>
 

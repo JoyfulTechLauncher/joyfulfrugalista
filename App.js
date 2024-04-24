@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 
+
 import MyTabs from "./components/MyTabs";
 import Profile from "./screens/Profile";
 
@@ -10,6 +11,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./screens/Login";
 import AddPage from "./screens/addPage";
 import AppNav from "./NavConfig";
+
 
 const Stack = createStackNavigator();
 
@@ -30,5 +32,9 @@ function AppNavigator() {
 }
 
 export default function App() {
-  return <AppNav />;
+  return (
+    <NavigationContainer>
+      <AppNav />
+    </NavigationContainer>
+  );
 }

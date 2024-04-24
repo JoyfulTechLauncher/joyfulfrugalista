@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+
 import { View, StyleSheet, Image } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -88,42 +88,20 @@ function MyStack() {
     <Stack.Navigator>
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="AddPage" component={AddPage} />
-      <Stack.Screen name="Summary" component={Summary} />
-    </Stack.Navigator>
-  );
-}
-
-function LoginJump() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Summary"
-        component={Summary}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen name="Tab" component={MyTabs} />
     </Stack.Navigator>
   );
 }
 
 function AppNav() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Tab"
-            component={MyTabs}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="MyStack"
-            component={MyStack}
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </GestureHandlerRootView>
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Tab"
+        component={MyTabs}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="MyStack" component={MyStack} />
+    </Stack.Navigator>
   );
 }
 
