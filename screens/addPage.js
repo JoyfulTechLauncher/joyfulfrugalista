@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import {View, Text, TextInput, StyleSheet, ScrollView, Alert} from 'react-native';
 import CategoryButton from '../components/categoryButton';
 import CalculatorButton from '../components/calculatorButton';
 import { getDatabase, ref, push, set } from 'firebase/database';
