@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import CategoryButton from '../components/categoryButton';
 import CalculatorButton from '../components/calculatorButton';
+import { getDatabase, ref, push, set } from 'firebase/database';
+
 
 const App = () => {
   const [inputValue, setInputValue] = useState('0');
@@ -38,12 +40,12 @@ const App = () => {
       setOperator(null);
     }
     else if (value === 'Done') {
-      if (operator && previousValue !== null) {
-        const result = calculate(parseFloat(previousValue), parseFloat(inputValue), operator);
-        setInputValue(String(result));
-        setPreviousValue(null);
-        setOperator(null);
-      }
+      if (!operator || previousValue === null) return;
+      const result = calculate(parseFloat(previousValue), parseFloat(inputValue), operator);
+      setInputValue(String(result));
+      setPreviousValue(null);
+      setOperator(null);
+      addEntryToDatabase(new Date().toISOString().split('T')[0], result);
     }
     else if (['+', '-'].includes(value)) {
       if (operator && previousValue !== null) {
@@ -73,6 +75,17 @@ const App = () => {
     }
   };
 
+  const addEntryToDatabase = (date, moneyAdded) => {
+    const database = getDatabase();
+    const addInfoRef = ref(database, 'addInfo');
+    const newEntryRef = push(addInfoRef);
+    set(newEntryRef, {
+      date,
+      moneyAdded
+    }).catch((error) => {
+      Alert.alert("Error", error.message);
+    });
+  };
 
   const calculatorButtons = [
     { label: '7', type: 'number' }, { label: '8', type: 'number' }, { label: '9', type: 'number' }, 

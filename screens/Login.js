@@ -14,7 +14,7 @@ const Login = ({ navigation }) => {
       .then((userCredential) => {
         uid = userCredential.user.uid;
         console.log("User UID:", uid);
-        navigation.navigate('MyTabs');
+        // navigation.navigate('MyTabs');
       })
       .catch((error) => {
         Alert.alert("Login failed", error.message);

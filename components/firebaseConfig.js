@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const firebaseConfig = {
   apiKey: "AIzaSyBDlfjFF6-T3HoxQJR5vHsV9BSSPSeXmYE",
   authDomain: "joyful-429b0.firebaseapp.com",
-  databaseURL: "https://joyful-429b0.firebaseio.com",
+  databaseURL: "https://joyful-429b0-default-rtdb.asia-southeast1.firebasedatabase.app/",
   projectId: "joyful-429b0",
   storageBucket: "joyful-429b0.appspot.com",
   messagingSenderId: "49637931335",
