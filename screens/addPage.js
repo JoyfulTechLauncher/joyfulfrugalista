@@ -31,42 +31,48 @@ const App = () => {
   const handleButtonPress = (value) => {
     if (value === 'Back') {
       setInputValue(inputValue.slice(0, -1) || '0');
-    } else if (value === 'C') {
-      // Clear all states to start fresh
+    }
+    else if (value === 'Date') {
       setInputValue('0');
       setPreviousValue(null);
       setOperator(null);
-    } else if (value === 'Done') {
-      if (!operator || previousValue === null) return;
-      const result = calculate(parseFloat(previousValue), parseFloat(inputValue), operator);
-      setInputValue(String(result));
-      setPreviousValue(null);
-      setOperator(null);
-    } else if (['+', '-'].includes(value)) {
+    }
+    else if (value === 'Done') {
       if (operator && previousValue !== null) {
         const result = calculate(parseFloat(previousValue), parseFloat(inputValue), operator);
-        setInputValue('0');
+        setInputValue(String(result));
+        setPreviousValue(null);
+        setOperator(null);
+      }
+    }
+    else if (['+', '-'].includes(value)) {
+      if (operator && previousValue !== null) {
+        const result = calculate(parseFloat(previousValue), parseFloat(inputValue), operator);
         setPreviousValue(String(result));
+        setInputValue('0');
         setOperator(value);
       } else {
-        setOperator(value);
         setPreviousValue(inputValue);
         setInputValue('0');
+        setOperator(value);
       }
-    } else if (value === 'Date'){
-        // handle the date button
-    } else {
-      setInputValue(inputValue === '0' ? String(value) : inputValue + value);
+    }
+    else if (!isNaN(value) || (value === '.' && !inputValue.includes('.'))) {
+      setInputValue((inputValue === '0' && value !== '.') ? value : inputValue + value);
     }
   };
 
   const calculate = (a, b, operator) => {
     switch(operator) {
-      case '+': return a + b;
-      case '-': return a - b;
-      default: return b;
+      case '+':
+        return a + b;
+      case '-':
+        return a - b;
+      default:
+        return b; // If no operator is provided, just return the second operand
     }
   };
+
 
   const calculatorButtons = [
     { label: '7', type: 'number' }, { label: '8', type: 'number' }, { label: '9', type: 'number' }, 
