@@ -11,7 +11,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./screens/Login";
 import AddPage from "./screens/addPage";
 import AppNav from "./NavConfig";
-
+import { AuthProvider } from "./components/AuthContext";
 
 const Stack = createStackNavigator();
 
@@ -33,8 +33,9 @@ function AppNavigator() {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <AppNav />
-    </NavigationContainer>
-  );
+      <AuthProvider>
+        <NavigationContainer>
+            <AppNav />
+        </NavigationContainer>
+      </AuthProvider>);
 }

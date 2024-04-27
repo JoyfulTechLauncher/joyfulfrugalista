@@ -3,13 +3,13 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 
 import CategoryButton from '../components/categoryButton';
 import CalculatorButton from '../components/calculatorButton';
 import { getDatabase, ref, push, set } from 'firebase/database';
-
+import { useAuth } from '../components/AuthContext';
 
 const App = () => {
   const [inputValue, setInputValue] = useState('0');
   const [previousValue, setPreviousValue] = useState(null);
   const [operator, setOperator] = useState(null);
-
+  const { currentUser } = useAuth();
   // Add the logic for handling button press
   // const handleButtonPress = (value) => {
   //   if (value === 'Back') {
@@ -40,12 +40,16 @@ const App = () => {
       setOperator(null);
     }
     else if (value === 'Done') {
-      if (!operator || previousValue === null) return;
-      const result = calculate(parseFloat(previousValue), parseFloat(inputValue), operator);
+      let result = inputValue;
+      if (operator && previousValue !== null) {
+        result = calculate(parseFloat(previousValue), parseFloat(inputValue), operator);
+        setPreviousValue(null);
+        setOperator(null);
+      }
       setInputValue(String(result));
-      setPreviousValue(null);
-      setOperator(null);
-      addEntryToDatabase(new Date().toISOString().split('T')[0], result);
+      if (currentUser && currentUser.uid) {
+        addEntryToDatabase(currentUser.uid, new Date().toISOString().split('T')[0], result);
+      }
     }
     else if (['+', '-'].includes(value)) {
       if (operator && previousValue !== null) {
@@ -75,11 +79,11 @@ const App = () => {
     }
   };
 
-  const addEntryToDatabase = (date, moneyAdded) => {
+  const addEntryToDatabase = (uid, date, moneyAdded) => {
     const database = getDatabase();
-    const addInfoRef = ref(database, 'addInfo');
-    const newEntryRef = push(addInfoRef);
-    set(newEntryRef, {
+    const userAddInfoRef = ref(database, `addInfo/${uid}`);
+    const newRecordRef = push(userAddInfoRef);
+    set(newRecordRef, {
       date,
       moneyAdded
     }).catch((error) => {
@@ -161,7 +165,7 @@ const App = () => {
         </View>
       </ScrollView>
     </View>
-  );
+);
 };
 
 const styles = StyleSheet.create({
