@@ -5,7 +5,6 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
 
-    // 提供设置用户的函数
     const setUser = (user) => {
         setCurrentUser(user);
     };
