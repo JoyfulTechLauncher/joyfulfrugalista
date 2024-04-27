@@ -48,7 +48,8 @@ const App = () => {
       }
       setInputValue(String(result));
       if (currentUser && currentUser.uid) {
-        addEntryToDatabase(currentUser.uid, new Date().toISOString().split('T')[0], result);
+        addEntryToDatabase(currentUser.uid, new Date().toISOString().split('T')[0] +
+            " "+ new Date().toISOString().split('T')[1].split('.')[0], result);
       }
     }
     else if (['+', '-'].includes(value)) {
