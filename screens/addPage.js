@@ -69,7 +69,7 @@ const App = () => {
       case '-':
         return a - b;
       default:
-        return b; // If no operator is provided, just return the second operand
+        return b;
     }
   };
 
