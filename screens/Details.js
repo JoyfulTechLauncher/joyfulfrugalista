@@ -1,12 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet,View, Text, TouchableOpacity, Image, Platform} from "react-native";
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
+import { getDatabase, ref, push, get } from 'firebase/database';
+import { useAuth } from '../components/AuthContext';
 
 function Detail({ navigation }) {
 
   const [dateIndex, setDateIndex] = useState(0);
   const [dataType, setDataType] = useState('saving'); // 'saving', 'expense', 'income'
+  const { currentUser } = useAuth();
+  const [fetchedData, setFetchedData] = useState(null);
 
   // Function to get today's date in the format: "March 23, 2024"
   const getDate = (dateIndex) => {
@@ -30,96 +33,6 @@ function Detail({ navigation }) {
     return dataType === data ? styles.activeButtonText : styles.buttonText;
   };
 
-  const monthlyBudget = 1000; // Example monthly budget
-  const currentExpenses = 750; // Example current expenses
-
-  // Calculate the progress (percentage of expenses relative to budget)
-  const progress = currentExpenses / monthlyBudget;
-
-  const loadData = () => {
-    switch (dataType) {
-      case 'saving':
-        return (
-          <View>
-            <View style={styles.board}>
-              <Text style={styles.boardLabel}>You have saved</Text>
-              <Text style={styles.amount}>$300</Text>
-            </View>
-            <ScrollView style={styles.scrollView}>
-              <View style={styles.dataContainer}>
-                <Text style={styles.dateText}>{getDate(0)}</Text>
-                <View style={styles.data}>
-                  <Image source={require('../assets/housing.png')} style={styles.dataIcon}/>
-                  <View style={styles.dataText}>
-                    <Text style={styles.dataLabel}>Description</Text>
-                    <Text style={styles.dataAmount}>$30</Text>
-                  </View>
-                </View>
-                <View style={styles.data}>
-                  <Image source={require('../assets/food.png')} style={styles.dataIcon}/>
-                  <View style={styles.dataText}>
-                    <Text style={styles.dataLabel}>Description</Text>
-                    <Text style={styles.dataAmount}>$40</Text>
-                  </View>
-                </View>
-              </View>
-            </ScrollView>
-          </View>
-        );
-      case 'expense':
-        return (
-          <View>
-          <View style={styles.board}>
-              <Text style={styles.boardLabel}>You have spent</Text>
-              <Text style={styles.amount}>$350</Text>
-          </View>
-          <ScrollView style={styles.scrollView}>
-            <View style={styles.dataContainer}>
-              <Text style={styles.dateText}>{getDate(0)}</Text>
-              <View style={styles.data}>
-                <Image source={require('../assets/education.png')} style={styles.dataIcon}/>
-                <View style={styles.dataText}>
-                  <Text style={styles.dataLabel}>Description</Text>
-                  <Text style={styles.dataAmount}>$500</Text>
-                </View>
-              </View>
-            </View>
-          </ScrollView>
-        </View>
-        );
-      case 'income':
-        return (
-          <View>
-          <View style={styles.board}>
-              <Text style={styles.boardLabel}>You have earned</Text>
-              <Text style={styles.amount}>$1400</Text>
-          </View>
-          <ScrollView style={styles.scrollView}>
-            <View style={styles.dataContainer}>
-              <Text style={styles.dateText}>{getDate(0)}</Text>
-              <View style={styles.data}>
-                <Image source={require('../assets/household.png')} style={styles.dataIcon}/>
-                <View style={styles.dataText}>
-                  <Text style={styles.dataLabel}>Description</Text>
-                  <Text style={styles.dataAmount}>$800</Text>
-                </View>
-              </View>
-              <View style={styles.data}>
-                <Image source={require('../assets/education.png')} style={styles.dataIcon}/>
-                <View style={styles.dataText}>
-                  <Text style={styles.dataLabel}>Description</Text>
-                  <Text style={styles.dataAmount}>$900</Text>
-                </View>
-              </View>
-            </View>
-          </ScrollView>
-        </View>
-        );
-      default:
-        return null;
-    }
-  };
-
   // Date navigation
   const handlePrevious = () => {
     setDateIndex(dateIndex - 1);
@@ -128,8 +41,63 @@ function Detail({ navigation }) {
   const handleNext = () => {
     setDateIndex(Math.min(0, dateIndex + 1));
   };
+  const monthlyBudget = 1000; // Example monthly budget
+  const currentExpenses = 750; // Example current expenses
 
+  // Calculate the progress (percentage of expenses relative to budget)
+  const progress = currentExpenses / monthlyBudget;
 
+  const fetchSavingData = (uid) => {
+    const database = getDatabase();
+    const userAddInfoRef = ref(database, `addInfo/${uid}`);
+  
+    // Fetch data from Firebase
+    return new Promise((resolve, reject) => {
+      get(userAddInfoRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          // Data exists, extract and return it
+          resolve(snapshot.val());
+        } else {
+          // Handle case when no data exists
+          resolve(null);
+        }
+      }).catch((error) => {
+        // Handle error while fetching data
+        console.error('Error fetching data from database:', error);
+        reject(error);
+      });
+    });
+  };
+
+  useEffect(() => {
+    // Check if the user is logged in and has a valid UID
+    if (currentUser) {
+      // Fetch data from Firebase
+      fetchSavingData(currentUser.uid)
+        .then((data) => {
+          setFetchedData(data);
+          console.log( 'Data fetched from database:', data);
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    }
+  }, [currentUser]);
+
+  const categories = [
+    { id: 'Housing', iconName: require('../assets/housing.png'), color: '#D0C6E1' },
+    { id: 'Household', iconName: require('../assets/household.png'), color: '#F1EBF2' },
+    { id: 'Utilities', iconName: require('../assets/utilities.png'), color: '#C4D3EB' },
+    { id: 'Transport', iconName: require('../assets/transport.png'), color: '#D0ECF3' },
+    { id: 'Food', iconName: require('../assets/food.png'), color: '#BCE1D6' },
+    { id: 'Health', iconName: require('../assets/health.png'), color: '#C5E1BA' },
+    { id: 'Education', iconName: require('../assets/education.png'), color: '#F5C4DB' },
+    { id: 'Appearance', iconName: require('../assets/appearance.png'), color: '#F7E8E4' },
+    { id: 'Lifestyle', iconName: require('../assets/lifestyle.png'), color: '#F4EB85' },
+    { id: 'Service Fee', iconName: require('../assets/service fee.png'), color: '#FFD6A1' },
+  ];
+
+  // Render the component's UI
   return (
     <View style={styles.container}>
     <View style={styles.header}>
@@ -144,18 +112,45 @@ function Detail({ navigation }) {
 
     <View style={styles.mainButtons}>
       <TouchableOpacity onPress={() => {handleDataChange('saving')}} style={getButtonStyle('saving')}>
-        <Text style={getButtonTextColor('saving')}>Saving</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => {handleDataChange('expense')}} style={getButtonStyle('expense')}>
-        <Text style={getButtonTextColor('expense')}>Expense</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => {handleDataChange('income')}} style={getButtonStyle('income')}>
-        <Text style={getButtonTextColor('income')}>Income</Text>
+        <Text style={getButtonTextColor('saving')}>Saving Records</Text>
       </TouchableOpacity>
     </View>
 
     <View style={styles.content}>
-        {loadData()}
+      <View>
+          <View style={styles.board}>
+            <Text style={styles.boardLabel}>You have saved</Text>
+            <Text style={styles.amount}>$300</Text>
+          </View>
+        </View>
+      <ScrollView style={styles.scrollView}>
+        <View>
+          {fetchedData ? (
+            Object.keys(fetchedData).map((key, index) => {
+              const { date, category, moneyAdded } = fetchedData[key];
+              const categoryInfo = categories.find((item) => item.id === category);
+              if (!categoryInfo) return null; // Skip if category not found
+              return(
+                <View key={index}>
+                <View style={styles.dataContainer}>
+                  <Text style={styles.dateText}>{date}</Text>
+                  <View style={[styles.data, { backgroundColor: categoryInfo.color }]}>
+                    <Image source={categoryInfo.iconName} style={styles.dataIcon} />
+                    <View style={styles.dataText}>
+                      <Text style={styles.dataLabel}>Description</Text>
+                      <Text style={styles.dataAmount}>{moneyAdded}</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            );
+          })
+          ) : (
+            <Text>No data available</Text>
+          )}
+        </View>
+      </ScrollView>
+
       </View>
     <TouchableOpacity onPress={() => navigation.navigate("Back", { screen: "AddPage" })} style={styles.addButton}>
         <Text style={styles.addButtonText}>+</Text>
@@ -166,7 +161,6 @@ function Detail({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //backgroundColor: '#fff',
     backgroundColor: '#2d144b',
   },
   header: {
@@ -267,8 +261,9 @@ const styles = StyleSheet.create({
   data: {
     alignItems: 'center',
     flexDirection: 'row',
-    backgroundColor: '#F1EBF2',
-    marginTop: 10,
+    //backgroundColor: '#F1EBF2',
+    marginTop: 5,
+    marginBottom: 5,
     padding: 10,
     borderRadius: 5,
     height: 50,
