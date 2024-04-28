@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import {View, Text, TextInput, StyleSheet, ScrollView, Alert} from 'react-native';
+import { useNavigation } from '@react-navigation/native'; 
 import CategoryButton from '../components/categoryButton';
 import CalculatorButton from '../components/calculatorButton';
-import { getDatabase, ref, push, set } from 'firebase/database';
 import { useAuth } from '../components/AuthContext';
+import { addEntryToDatabase } from '../components/FirebaseDatabase';
+
 
 const App = () => {
+  const navigation = useNavigation();
   const [inputValue, setInputValue] = useState('0');
   const [previousValue, setPreviousValue] = useState(null);
   const [operator, setOperator] = useState(null);
   const { currentUser } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState(null);
+
   const handleButtonPress = (value) => {
     if (value === 'Back') {
       setInputValue(inputValue.slice(0, -1) || '0');
@@ -31,7 +35,16 @@ const App = () => {
       if (currentUser && currentUser.uid) {
         const date = new Date().toISOString().split('T')[0] + " " + new Date().toISOString().split('T')[1].split('.')[0];
         const categoryToSave = selectedCategory ?? "Others";
-        addEntryToDatabase(currentUser.uid, date, result, categoryToSave);
+        addEntryToDatabase(currentUser.uid, date, result, categoryToSave)
+        .then(() => {
+          // If data is successfully added, navigate back to YourComponent
+          navigation.goBack();
+          // Trigger data fetching and rerendering in YourComponent
+          navigation.navigate('Details', { fetchDataAndUpdate: true });
+        })
+        .catch((error) => {
+          console.error('Error adding data:', error);
+        });
         Alert.alert("Added successfully!");
         setSelectedCategory(null);
       }
@@ -62,19 +75,6 @@ const App = () => {
       default:
         return b;
     }
-  };
-
-  const addEntryToDatabase = (uid, date, moneyAdded, category) => {
-    const database = getDatabase();
-    const userAddInfoRef = ref(database, `addInfo/${uid}`);
-    const newRecordRef = push(userAddInfoRef);
-    set(newRecordRef, {
-      date,
-      moneyAdded,
-      category
-    }).catch((error) => {
-      Alert.alert("Error", error.message);
-    });
   };
 
 
