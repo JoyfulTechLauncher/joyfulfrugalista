@@ -130,7 +130,7 @@ function Profile({ navigation }) {
             <TouchableOpacity
               style={styles.transparentButton}
               onPress={() =>
-                navigation.navigate("MyStack", { screen: "Login" })
+                navigation.navigate("Back", { screen: "Login" })
               }
             >
               <Text style={styles.userNameText}>Login</Text>

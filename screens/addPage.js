@@ -10,26 +10,7 @@ const App = () => {
   const [previousValue, setPreviousValue] = useState(null);
   const [operator, setOperator] = useState(null);
   const { currentUser } = useAuth();
-  // Add the logic for handling button press
-  // const handleButtonPress = (value) => {
-  //   if (value === 'Back') {
-  //     setInputValue(inputValue.slice(0, -1) || '0');
-  //   } else if (value === 'Done') {
-  //     if (!operator) return;
-  //     const result = calculate(parseFloat(previousValue), parseFloat(inputValue), operator);
-  //     setInputValue(String(result));
-  //     setPreviousValue(null);
-  //     setOperator(null);
-  //   } else if (['+', '-'].includes(value)) {
-  //     setOperator(value);
-  //     setPreviousValue(inputValue);
-  //     setInputValue('0');
-  //   } else if (value === 'Date'){
-  //     // handle the date button
-  //   } else {
-  //     setInputValue(inputValue === '0' ? String(value) : inputValue + value);
-  //   }
-  // };
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const handleButtonPress = (value) => {
     if (value === 'Back') {
       setInputValue(inputValue.slice(0, -1) || '0');
@@ -48,8 +29,11 @@ const App = () => {
       }
       setInputValue(String(result));
       if (currentUser && currentUser.uid) {
-        addEntryToDatabase(currentUser.uid, new Date().toISOString().split('T')[0] +
-            " "+ new Date().toISOString().split('T')[1].split('.')[0], result);
+        const date = new Date().toISOString().split('T')[0] + " " + new Date().toISOString().split('T')[1].split('.')[0];
+        const categoryToSave = selectedCategory ?? "Others";
+        addEntryToDatabase(currentUser.uid, date, result, categoryToSave);
+        Alert.alert("Added successfully!");
+        setSelectedCategory(null);
       }
     }
     else if (['+', '-'].includes(value)) {
@@ -80,17 +64,19 @@ const App = () => {
     }
   };
 
-  const addEntryToDatabase = (uid, date, moneyAdded) => {
+  const addEntryToDatabase = (uid, date, moneyAdded, category) => {
     const database = getDatabase();
     const userAddInfoRef = ref(database, `addInfo/${uid}`);
     const newRecordRef = push(userAddInfoRef);
     set(newRecordRef, {
       date,
-      moneyAdded
+      moneyAdded,
+      category
     }).catch((error) => {
       Alert.alert("Error", error.message);
     });
   };
+
 
   const calculatorButtons = [
     { label: '7', type: 'number' }, { label: '8', type: 'number' }, { label: '9', type: 'number' }, 
@@ -106,7 +92,7 @@ const App = () => {
   ];
 
   const handleCategoryPress = (category) => {
-    // press event logic
+    setSelectedCategory(category);
     console.log('Category selected:', category);
   };
 

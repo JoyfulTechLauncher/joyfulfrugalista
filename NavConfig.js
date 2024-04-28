@@ -86,8 +86,16 @@ function MyTabs() {
 function MyStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="AddPage" component={AddPage} />
+        <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+        />
+        <Stack.Screen
+            name="AddPage"
+            component={AddPage}
+            options={{ headerShown: false }}
+        />
     </Stack.Navigator>
   );
 }
@@ -100,7 +108,7 @@ function AppNav() {
         component={MyTabs}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="MyStack" component={MyStack} />
+      <Stack.Screen name="Back" component={MyStack} />
     </Stack.Navigator>
   );
 }
