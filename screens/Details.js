@@ -157,7 +157,7 @@ function Detail({ navigation }) {
     <View style={styles.content}>
         {loadData()}
       </View>
-    <TouchableOpacity onPress={() => navigation.navigate("MyStack", { screen: "AddPage" })} style={styles.addButton}>
+    <TouchableOpacity onPress={() => navigation.navigate("Back", { screen: "AddPage" })} style={styles.addButton}>
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
   </View>

@@ -50,6 +50,7 @@ const App = () => {
       if (currentUser && currentUser.uid) {
         addEntryToDatabase(currentUser.uid, new Date().toISOString().split('T')[0] +
             " "+ new Date().toISOString().split('T')[1].split('.')[0], result);
+        Alert.alert("Added successfully!");
       }
     }
     else if (['+', '-'].includes(value)) {
