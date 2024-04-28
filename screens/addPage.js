@@ -5,6 +5,7 @@ import CategoryButton from '../components/categoryButton';
 import CalculatorButton from '../components/calculatorButton';
 import { useAuth } from '../components/AuthContext';
 import { addEntryToDatabase } from '../components/FirebaseDatabase';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 const App = () => {
@@ -14,15 +15,25 @@ const App = () => {
   const [operator, setOperator] = useState(null);
   const { currentUser } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const showDatepicker = () => {
+    setShowDatePicker(true);
+  };
+  const onDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShowDatePicker(false);
+    setDate(currentDate);
+  };
+
 
   const handleButtonPress = (value) => {
     if (value === 'Back') {
       setInputValue(inputValue.slice(0, -1) || '0');
     }
     else if (value === 'Date') {
-      setInputValue('0');
-      setPreviousValue(null);
-      setOperator(null);
+      setShowDatePicker(true);
+      showDatepicker();
     }
     else if (value === 'Done') {
       let result = inputValue;
@@ -33,20 +44,19 @@ const App = () => {
       }
       setInputValue(String(result));
       if (currentUser && currentUser.uid) {
-        const date = new Date().toISOString().split('T')[0] + " " + new Date().toISOString().split('T')[1].split('.')[0];
+        const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
         const categoryToSave = selectedCategory ?? "Others";
-        addEntryToDatabase(currentUser.uid, date, result, categoryToSave)
-        .then(() => {
-          // If data is successfully added, navigate back to YourComponent
-          navigation.goBack();
-          // Trigger data fetching and rerendering in YourComponent
-          navigation.navigate('Details', { fetchDataAndUpdate: true });
-        })
-        .catch((error) => {
-          console.error('Error adding data:', error);
-        });
-        Alert.alert("Added successfully!");
+        addEntryToDatabase(currentUser.uid, formattedDate, result, categoryToSave)
+            .then(() => {
+              Alert.alert("Added successfully!");
+              navigation.goBack();
+            })
+            .catch((error) => {
+              console.error('Error adding data:', error);
+              Alert.alert("Error", error.message);
+            });
         setSelectedCategory(null);
+        setShowDatePicker(false);
       }
     }
     else if (['+', '-'].includes(value)) {
@@ -56,6 +66,7 @@ const App = () => {
         setInputValue('0');
         setOperator(value);
       } else {
+        setShowDatePicker(false);
         setPreviousValue(inputValue);
         setInputValue('0');
         setOperator(value);
@@ -150,6 +161,17 @@ const App = () => {
             />
           ))}
         </View>
+        {showDatePicker && (
+            <DateTimePicker
+                testID="dateTimePicker"
+                value={date}
+                mode="date"
+                is24Hour={true}
+                display="default"
+                onChange={onDateChange}
+            />
+        )}
+
       </ScrollView>
     </View>
 );
