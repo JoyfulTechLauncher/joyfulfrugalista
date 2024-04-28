@@ -4,6 +4,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { fetchSavingData } from '../components/FirebaseDatabase';
 import { useAuth } from '../components/AuthContext';
+import { useFocusEffect } from '@react-navigation/native';
 
 function Detail({ navigation }) {
 
@@ -70,6 +71,14 @@ function Detail({ navigation }) {
       fetchDataAndUpdate();
     }
   }, [route.params]);
+
+  useFocusEffect(
+      React.useCallback(() => {
+        fetchDataAndUpdate();
+        // No cleanup action needed, but you could return a cleanup function if necessary
+        return () => {};
+      }, [currentUser])
+  );
 
   const fetchDataAndUpdate = () => {
     // Fetch data from the database
