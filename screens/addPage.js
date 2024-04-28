@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import {View, Text, TextInput, StyleSheet, ScrollView, Alert} from 'react-native';
 import CategoryButton from '../components/categoryButton';
 import CalculatorButton from '../components/calculatorButton';
+import { getDatabase, ref, push, set } from 'firebase/database';
+import { useAuth } from '../components/AuthContext';
 
 const App = () => {
   const [inputValue, setInputValue] = useState('0');
   const [previousValue, setPreviousValue] = useState(null);
   const [operator, setOperator] = useState(null);
-
+  const { currentUser } = useAuth();
   // Add the logic for handling button press
   // const handleButtonPress = (value) => {
   //   if (value === 'Back') {
@@ -31,41 +33,63 @@ const App = () => {
   const handleButtonPress = (value) => {
     if (value === 'Back') {
       setInputValue(inputValue.slice(0, -1) || '0');
-    } else if (value === 'C') {
-      // Clear all states to start fresh
+    }
+    else if (value === 'Date') {
       setInputValue('0');
       setPreviousValue(null);
       setOperator(null);
-    } else if (value === 'Done') {
-      if (!operator || previousValue === null) return;
-      const result = calculate(parseFloat(previousValue), parseFloat(inputValue), operator);
+    }
+    else if (value === 'Done') {
+      let result = inputValue;
+      if (operator && previousValue !== null) {
+        result = calculate(parseFloat(previousValue), parseFloat(inputValue), operator);
+        setPreviousValue(null);
+        setOperator(null);
+      }
       setInputValue(String(result));
-      setPreviousValue(null);
-      setOperator(null);
-    } else if (['+', '-'].includes(value)) {
+      if (currentUser && currentUser.uid) {
+        addEntryToDatabase(currentUser.uid, new Date().toISOString().split('T')[0] +
+            " "+ new Date().toISOString().split('T')[1].split('.')[0], result);
+      }
+    }
+    else if (['+', '-'].includes(value)) {
       if (operator && previousValue !== null) {
         const result = calculate(parseFloat(previousValue), parseFloat(inputValue), operator);
-        setInputValue('0');
         setPreviousValue(String(result));
+        setInputValue('0');
         setOperator(value);
       } else {
-        setOperator(value);
         setPreviousValue(inputValue);
         setInputValue('0');
+        setOperator(value);
       }
-    } else if (value === 'Date'){
-        // handle the date button
-    } else {
-      setInputValue(inputValue === '0' ? String(value) : inputValue + value);
+    }
+    else if (!isNaN(value) || (value === '.' && !inputValue.includes('.'))) {
+      setInputValue((inputValue === '0' && value !== '.') ? value : inputValue + value);
     }
   };
 
   const calculate = (a, b, operator) => {
     switch(operator) {
-      case '+': return a + b;
-      case '-': return a - b;
-      default: return b;
+      case '+':
+        return a + b;
+      case '-':
+        return a - b;
+      default:
+        return b;
     }
+  };
+
+  const addEntryToDatabase = (uid, date, moneyAdded) => {
+    const database = getDatabase();
+    const userAddInfoRef = ref(database, `addInfo/${uid}`);
+    const newRecordRef = push(userAddInfoRef);
+    set(newRecordRef, {
+      date,
+      moneyAdded
+    }).catch((error) => {
+      Alert.alert("Error", error.message);
+    });
   };
 
   const calculatorButtons = [
@@ -142,7 +166,7 @@ const App = () => {
         </View>
       </ScrollView>
     </View>
-  );
+);
 };
 
 const styles = StyleSheet.create({

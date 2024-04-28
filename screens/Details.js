@@ -157,7 +157,7 @@ function Detail({ navigation }) {
     <View style={styles.content}>
         {loadData()}
       </View>
-    <TouchableOpacity onPress={() => navigation.navigate('AddPage')} style={styles.addButton}>
+    <TouchableOpacity onPress={() => navigation.navigate("MyStack", { screen: "AddPage" })} style={styles.addButton}>
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
   </View>
@@ -166,7 +166,7 @@ function Detail({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    //backgroundColor: '#fff',
     backgroundColor: '#2d144b',
   },
   header: {
