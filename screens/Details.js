@@ -1,15 +1,17 @@
 import { StyleSheet,View, Text, TouchableOpacity, Image, Platform} from "react-native";
 import React, { useState, useEffect  } from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { getDatabase, ref, push, get } from 'firebase/database';
+import { fetchSavingData } from '../components/FirebaseDatabase';
 import { useAuth } from '../components/AuthContext';
 
 function Detail({ navigation }) {
 
+  const route = useRoute();
   const [dateIndex, setDateIndex] = useState(0);
   const [dataType, setDataType] = useState('saving'); // 'saving', 'expense', 'income'
   const { currentUser } = useAuth();
-  const [fetchedData, setFetchedData] = useState(null);
+  const [fetchedData, setFetchedData] = useState({ savingEntries: [], totalSaved: 0 });
 
   // Function to get today's date in the format: "March 23, 2024"
   const getDate = (dateIndex) => {
@@ -47,28 +49,6 @@ function Detail({ navigation }) {
   // Calculate the progress (percentage of expenses relative to budget)
   const progress = currentExpenses / monthlyBudget;
 
-  const fetchSavingData = (uid) => {
-    const database = getDatabase();
-    const userAddInfoRef = ref(database, `addInfo/${uid}`);
-  
-    // Fetch data from Firebase
-    return new Promise((resolve, reject) => {
-      get(userAddInfoRef).then((snapshot) => {
-        if (snapshot.exists()) {
-          // Data exists, extract and return it
-          resolve(snapshot.val());
-        } else {
-          // Handle case when no data exists
-          resolve(null);
-        }
-      }).catch((error) => {
-        // Handle error while fetching data
-        console.error('Error fetching data from database:', error);
-        reject(error);
-      });
-    });
-  };
-
   useEffect(() => {
     // Check if the user is logged in and has a valid UID
     if (currentUser) {
@@ -83,6 +63,25 @@ function Detail({ navigation }) {
         });
     }
   }, [currentUser]);
+
+  useEffect(() => {
+    // Call fetchDataAndUpdate when the screen mounts or when the fetchDataAndUpdate flag is true
+    if (route.params && route.params.fetchDataAndUpdate) {
+      fetchDataAndUpdate();
+    }
+  }, [route.params]);
+
+  const fetchDataAndUpdate = () => {
+    // Fetch data from the database
+    fetchSavingData(currentUser.uid)
+      .then((data) => {
+        // Update the state with the fetched data
+        setFetchedData(data);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  };
 
   const categories = [
     { id: 'Housing', iconName: require('../assets/housing.png'), color: '#D0C6E1' },
@@ -120,14 +119,14 @@ function Detail({ navigation }) {
       <View>
           <View style={styles.board}>
             <Text style={styles.boardLabel}>You have saved</Text>
-            <Text style={styles.amount}>$300</Text>
+            <Text style={styles.amount}>${fetchedData.totalSaved}</Text>
           </View>
         </View>
       <ScrollView style={styles.scrollView}>
         <View>
           {fetchedData ? (
-            Object.keys(fetchedData).map((key, index) => {
-              const { date, category, moneyAdded } = fetchedData[key];
+            Object.keys(fetchedData.savingEntries).map((key, index) => {
+              const { date, category, moneyAdded } = fetchedData.savingEntries[key];
               const categoryInfo = categories.find((item) => item.id === category);
               if (!categoryInfo) return null; // Skip if category not found
               return(
@@ -138,7 +137,7 @@ function Detail({ navigation }) {
                     <Image source={categoryInfo.iconName} style={styles.dataIcon} />
                     <View style={styles.dataText}>
                       <Text style={styles.dataLabel}>Description</Text>
-                      <Text style={styles.dataAmount}>{moneyAdded}</Text>
+                      <Text style={styles.dataAmount}>${moneyAdded}</Text>
                     </View>
                   </View>
                 </View>
