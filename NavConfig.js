@@ -10,6 +10,7 @@ import Community from "./screens/Community";
 import Registry from "./screens/Registry"
 import Login from "./screens/Login";
 import Profile from "./screens/Profile";
+import ForgetPassword from "./screens/ForgetPassword";
 import {
   Octicons,
   Fontisto,
@@ -100,6 +101,11 @@ function MyStack() {
         <Stack.Screen
             name="Registry"
             component={Registry}
+            options={{ headerShown: false }}
+        />
+        <Stack.Screen
+            name="ForgetPassword"
+            component={ForgetPassword}
             options={{ headerShown: false }}
         />
     </Stack.Navigator>
