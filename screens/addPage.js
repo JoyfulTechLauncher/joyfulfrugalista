@@ -17,6 +17,7 @@ const App = () => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [description, setDescription] = useState(''); // new state for description input
   const toggleDatePicker = () => {
     setDatePickerVisibility(!isDatePickerVisible);
   };
@@ -49,10 +50,10 @@ const App = () => {
         setOperator(null);
       }
       setInputValue(String(result));
-      if (currentUser && currentUser.uid) {
+      if (currentUser && currentUser.uid && description.trim()) {
         const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
         const categoryToSave = selectedCategory ?? "Others";
-        addEntryToDatabase(currentUser.uid, formattedDate, result, categoryToSave)
+        addEntryToDatabase(currentUser.uid, formattedDate, result, categoryToSave, description)
             .then(() => {
               Alert.alert("Added successfully!");
               navigation.goBack();
@@ -62,6 +63,7 @@ const App = () => {
               Alert.alert("Error", error.message);
             });
         setSelectedCategory(null);
+        setDescription(''); // clear description input
         setShowDatePicker(false);
       }
     }
@@ -148,7 +150,7 @@ const App = () => {
           <Text style={styles.inputDisplay}>{inputValue}</Text>
 
           {/* Description input */}
-          <TextInput style={styles.descriptionInput} placeholder="Description" />
+          <TextInput style={styles.descriptionInput} placeholder="Description" value={description} onChangeText={setDescription} />
 
           {/* Numeric keypad */}
           <View style={styles.keypad}>
@@ -268,9 +270,9 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: '#29144A',
     borderWidth: 1,
-    margin: 10,
-    color: '#FFFFFF',
-    padding: 20,
+    margin: 20,
+    color: '#000000',
+    padding: 5,
     marginHorizontal: 20, 
     borderRadius: 10,
   },
