@@ -156,7 +156,7 @@ function Profile({ navigation }) {
                 navigation.navigate("MyStack", { screen: "Login" })
               }
             >
-              <Text style={styles.userNameText}>Login</Text>
+              <Text style={styles.userNameText}>Edit</Text>
             </TouchableOpacity>
           </View>
         </View>
