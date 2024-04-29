@@ -49,7 +49,7 @@ const Login = ({ navigation }) => {
         <Text style={styles.buttonText}>Sign in</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
         <Text style={styles.forgotPassword}>Forgot password</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('Registry')}>
