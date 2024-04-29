@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import {View, Text, TextInput, StyleSheet, ScrollView, Alert} from 'react-native';
+import {View, Text, TextInput, StyleSheet, ScrollView, Alert, Modal, Platform, TouchableOpacity} from 'react-native';
 import { useNavigation } from '@react-navigation/native'; 
 import CategoryButton from '../components/categoryButton';
 import CalculatorButton from '../components/calculatorButton';
 import { useAuth } from '../components/AuthContext';
 import { addEntryToDatabase } from '../components/FirebaseDatabase';
-
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const App = () => {
   const navigation = useNavigation();
@@ -14,15 +14,32 @@ const App = () => {
   const [operator, setOperator] = useState(null);
   const { currentUser } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const toggleDatePicker = () => {
+    setDatePickerVisibility(!isDatePickerVisible);
+  };
+  const showDatepicker = () => {
+    setShowDatePicker(true);
+  };
+  const onDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShowDatePicker(false);
+    setDate(currentDate);
+  };
+
 
   const handleButtonPress = (value) => {
     if (value === 'Back') {
       setInputValue(inputValue.slice(0, -1) || '0');
     }
     else if (value === 'Date') {
-      setInputValue('0');
-      setPreviousValue(null);
-      setOperator(null);
+      if (Platform.OS === 'ios') {
+        toggleDatePicker(); // 对于 iOS，显示模态
+      } else {
+        showDatepicker(); // 对于安卓，直接显示选择器
+      }
     }
     else if (value === 'Done') {
       let result = inputValue;
@@ -33,20 +50,19 @@ const App = () => {
       }
       setInputValue(String(result));
       if (currentUser && currentUser.uid) {
-        const date = new Date().toISOString().split('T')[0] + " " + new Date().toISOString().split('T')[1].split('.')[0];
+        const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
         const categoryToSave = selectedCategory ?? "Others";
-        addEntryToDatabase(currentUser.uid, date, result, categoryToSave)
-        .then(() => {
-          // If data is successfully added, navigate back to YourComponent
-          navigation.goBack();
-          // Trigger data fetching and rerendering in YourComponent
-          navigation.navigate('Details', { fetchDataAndUpdate: true });
-        })
-        .catch((error) => {
-          console.error('Error adding data:', error);
-        });
-        Alert.alert("Added successfully!");
+        addEntryToDatabase(currentUser.uid, formattedDate, result, categoryToSave)
+            .then(() => {
+              Alert.alert("Added successfully!");
+              navigation.goBack();
+            })
+            .catch((error) => {
+              console.error('Error adding data:', error);
+              Alert.alert("Error", error.message);
+            });
         setSelectedCategory(null);
+        setShowDatePicker(false);
       }
     }
     else if (['+', '-'].includes(value)) {
@@ -56,6 +72,7 @@ const App = () => {
         setInputValue('0');
         setOperator(value);
       } else {
+        setShowDatePicker(false);
         setPreviousValue(inputValue);
         setInputValue('0');
         setOperator(value);
@@ -111,51 +128,114 @@ const App = () => {
   ];
 
   return (
-    <View style={styles.container}>
-      {/* Add scroll */}
-      <ScrollView style={styles.scrollView}>
-        {/* Top navigation bar */}
-        {/* <View style={styles.navBar}>
-          <Text style={styles.navTitle}>Add</Text>
-        </View> */}
+      <View style={styles.container}>
+        {/* Scroll view for content */}
+        <ScrollView style={styles.scrollView}>
+          {/* Category buttons */}
+          <View style={styles.categoryContainer}>
+            {categories.map((category) => (
+                <CategoryButton
+                    key={category.id}
+                    iconName={category.iconName}
+                    title={category.title}
+                    onPress={() => handleCategoryPress(category.id)}
+                    color={category.color}
+                />
+            ))}
+          </View>
 
-        {/* Category buttons */}
-        <View style={styles.categoryContainer}>
-          {categories.map((category) => (
-            <CategoryButton
-              key={category.id}
-              iconName={category.iconName}
-              title={category.title}
-              onPress={() => handleCategoryPress(category.id)}
-              color={category.color}
+          {/* Display for the input value */}
+          <Text style={styles.inputDisplay}>{inputValue}</Text>
+
+          {/* Description input */}
+          <TextInput style={styles.descriptionInput} placeholder="Description" />
+
+          {/* Numeric keypad */}
+          <View style={styles.keypad}>
+            {calculatorButtons.map((button) => (
+                <CalculatorButton
+                    key={button.label}
+                    label={button.label}
+                    onPress={handleButtonPress}
+                    type={button.type}
+                    imageSource={button.imageSource}
+                />
+            ))}
+          </View>
+        </ScrollView>
+
+        {/* iOS DatePicker Modal */}
+        {Platform.OS === 'ios' && (
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={isDatePickerVisible}
+                onRequestClose={toggleDatePicker}>
+              <View style={styles.centeredModalView}>
+                <View style={styles.modalView}>
+                  <DateTimePicker
+                      testID="dateTimePicker"
+                      value={date}
+                      mode="date"
+                      is24Hour={true}
+                      display="spinner"
+                      onChange={onDateChange}
+                  />
+                  <TouchableOpacity
+                      style={styles.doneButton}
+                      onPress={toggleDatePicker}
+                  >
+                    <Text style={styles.doneButtonText}>Done</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+        )}
+
+        {/* Android DateTimePicker */}
+        {Platform.OS === 'android' && showDatePicker && (
+            <DateTimePicker
+                testID="dateTimePicker"
+                value={date}
+                mode="date"
+                is24Hour={true}
+                display="default"
+                onChange={onDateChange}
             />
-          ))}
-        </View>
-
-        {/* Display for the input value */}
-        <Text style={styles.inputDisplay}>{inputValue}</Text>
-
-        {/* Description input */}
-        <TextInput style={styles.descriptionInput} placeholder="Description" />
-
-        {/* Numeric keypad */}
-        <View style={styles.keypad}>
-          {calculatorButtons.map((button) => (
-            <CalculatorButton
-              key={button.label}
-              label={button.label}
-              onPress={handleButtonPress}
-              type={button.type}
-              imageSource={button.imageSource}
-            />
-          ))}
-        </View>
-      </ScrollView>
-    </View>
-);
+        )}
+      </View>
+  );
 };
 
 const styles = StyleSheet.create({
+  centeredModalView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalView: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  doneButton: {
+    marginTop: 20,
+    backgroundColor: '#f0f0f0', // Change this to your preferred button color
+    borderRadius: 10,
+    padding: 10,
+  },
+  doneButtonText: {
+    color: '#000', // Change this to your preferred button text color
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',

@@ -4,6 +4,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { fetchSavingData } from '../components/FirebaseDatabase';
 import { useAuth } from '../components/AuthContext';
+import { useFocusEffect } from '@react-navigation/native';
 
 function Detail({ navigation }) {
 
@@ -71,16 +72,30 @@ function Detail({ navigation }) {
     }
   }, [route.params]);
 
+  useFocusEffect(
+      React.useCallback(() => {
+        fetchDataAndUpdate();
+        // No cleanup action needed, but you could return a cleanup function if necessary
+        return () => {};
+      }, [currentUser])
+  );
+
   const fetchDataAndUpdate = () => {
-    // Fetch data from the database
-    fetchSavingData(currentUser.uid)
-      .then((data) => {
-        // Update the state with the fetched data
-        setFetchedData(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
+    // Check if currentUser and currentUser.uid exist before proceeding
+    if (currentUser && currentUser.uid) {
+      // Fetch saving data from the database using the user's UID
+      fetchSavingData(currentUser.uid)
+        .then((data) => {
+          // Update the state with the fetched saving data
+          setFetchedData(data);
+        })
+        .catch((error) => {
+          console.error('Error fetching saving data:', error);
+        });
+    } else {
+      console.log('User is not logged in');
+      
+    }
   };
 
   const categories = [
@@ -151,7 +166,7 @@ function Detail({ navigation }) {
       </ScrollView>
 
       </View>
-    <TouchableOpacity onPress={() => navigation.navigate("Back", { screen: "AddPage" })} style={styles.addButton}>
+    <TouchableOpacity onPress={() => navigation.navigate("   ", { screen: "AddPage" })} style={styles.addButton}>
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
   </View>
