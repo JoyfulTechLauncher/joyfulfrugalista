@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Joyful24",
-    "slug": "Joyful24",
+    "slug": "joyful-vmwvyxuigle2xedce7cll",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4f747f18-f90c-40fd-9f94-3f67eef595e6"
+      }
+    },
+    "owner": "572050487"
   }
 }

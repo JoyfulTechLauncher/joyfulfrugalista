@@ -108,7 +108,7 @@ function AppNav() {
         component={MyTabs}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="Back" component={MyStack} />
+      <Stack.Screen name="   " component={MyStack} />
     </Stack.Navigator>
   );
 }
