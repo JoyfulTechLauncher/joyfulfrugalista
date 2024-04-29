@@ -141,8 +141,9 @@ function Detail({ navigation }) {
         <View>
           {fetchedData ? (
             Object.keys(fetchedData.savingEntries).map((key, index) => {
-              const { date, category, moneyAdded } = fetchedData.savingEntries[key];
+              const { date, category, moneyAdded, description } = fetchedData.savingEntries[key];
               const categoryInfo = categories.find((item) => item.id === category);
+              const displayText = description?.trim() ? `${category}: ${description}` : category;
               if (!categoryInfo) return null; // Skip if category not found
               return(
                 <View key={index}>
@@ -151,7 +152,7 @@ function Detail({ navigation }) {
                   <View style={[styles.data, { backgroundColor: categoryInfo.color }]}>
                     <Image source={categoryInfo.iconName} style={styles.dataIcon} />
                     <View style={styles.dataText}>
-                      <Text style={styles.dataLabel}>Description</Text>
+                      <Text style={styles.dataLabel}>{displayText}</Text>
                       <Text style={styles.dataAmount}>${moneyAdded}</Text>
                     </View>
                   </View>

@@ -1,7 +1,7 @@
 import { getDatabase, ref, push, get, set } from 'firebase/database'
 
 
-export const addEntryToDatabase = (uid, date, moneyAdded, category) => {
+export const addEntryToDatabase = (uid, date, moneyAdded, category, description) => {
     return new Promise((resolve, reject) => {
       const database = getDatabase();
       const userAddInfoRef = ref(database, `addInfo/${uid}`);
@@ -10,7 +10,8 @@ export const addEntryToDatabase = (uid, date, moneyAdded, category) => {
       set(newRecordRef, {
         date,
         moneyAdded,
-        category
+        category,
+        description
       })
       .then(() => {
         resolve(); // Resolve the promise when data is successfully added
