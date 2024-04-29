@@ -81,15 +81,21 @@ function Detail({ navigation }) {
   );
 
   const fetchDataAndUpdate = () => {
-    // Fetch data from the database
-    fetchSavingData(currentUser.uid)
-      .then((data) => {
-        // Update the state with the fetched data
-        setFetchedData(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
+    // Check if currentUser and currentUser.uid exist before proceeding
+    if (currentUser && currentUser.uid) {
+      // Fetch saving data from the database using the user's UID
+      fetchSavingData(currentUser.uid)
+        .then((data) => {
+          // Update the state with the fetched saving data
+          setFetchedData(data);
+        })
+        .catch((error) => {
+          console.error('Error fetching saving data:', error);
+        });
+    } else {
+      console.log('User is not logged in');
+      
+    }
   };
 
   const categories = [
