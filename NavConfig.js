@@ -93,19 +93,6 @@ function MyStack() {
   );
 }
 
-function LoginJump() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Summary"
-        component={Summary}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen name="Tab" component={MyTabs} />
-    </Stack.Navigator>
-  );
-}
-
 function AppNav() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

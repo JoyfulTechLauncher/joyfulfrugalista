@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Button } from "react-native";
+import { View, Button, ActivityIndicator } from "react-native";
 import {
   SafeAreaView,
   ScrollView,
@@ -119,7 +119,8 @@ const styles = StyleSheet.create({
 });
 
 async function fetchProfile(uid) {
-  const response = await axios.get(URL + "/users/" + uid + ".json");
+  const response = await axios.get(uid);
+  //console.log(response);
   const userData = response.data;
 
   return userData;
@@ -127,16 +128,28 @@ async function fetchProfile(uid) {
 
 function Profile({ navigation }) {
   const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     async function getData() {
-      const userData = await fetchProfile("0l7PnttYM4SDQj6wp95jD0xvv7z1");
-      setUserData(userData);
+      try {
+        const uid = "nOZIt4pQugMvmfPuGezK8nzZLmK2"; //
+        const str = URL + "users/" + uid + ".json";
+        console.log("" + str);
+        const userData = await fetchProfile(str);
+        setUserData(userData);
+        setLoading(false);
+      } catch (err) {
+        // console.log(err);//////////
+      }
     }
 
     getData();
+    console.log(userData);
   }, []);
-
-  console.log(userData);
+  //
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -185,7 +198,7 @@ function Profile({ navigation }) {
         <View style={styles.banner}>
           <Text style={styles.buttonText}>Your Monthly Saving Goal</Text>
           {/* need dynamically update */}
-          <Text style={styles.savingGoalText}>$400</Text>
+          <Text style={styles.savingGoalText}>${userData.goal}</Text>
         </View>
 
         <View style={styles.detailRow}>
