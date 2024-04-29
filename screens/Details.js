@@ -13,14 +13,27 @@ function Detail({ navigation }) {
   const [dataType, setDataType] = useState('saving'); // 'saving', 'expense', 'income'
   const { currentUser } = useAuth();
   const [fetchedData, setFetchedData] = useState({ savingEntries: [], totalSaved: 0 });
+  const [totalSavingAmount, setTotalSavingAmount] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
+
 
   // Function to get today's date in the format: "March 23, 2024"
   const getDate = (dateIndex) => {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const currentDate = new Date();
     const targetDate = new Date(currentDate);
     targetDate.setDate(currentDate.getDate() + dateIndex);
-    return targetDate.toLocaleDateString(undefined, options);
+
+    // Get year, month, and day components from the target date
+    const year = targetDate.getFullYear();
+    const month = targetDate.getMonth() + 1; 
+    const day = targetDate.getDate();
+
+    // Format the date components with leading zeros if necessary
+    const formattedMonth = month < 10 ? `0${month}` : `${month}`;
+    const formattedDay = day < 10 ? `0${day}` : `${day}`;
+
+    // Return the formatted date string in the "yyyy-mm-dd" format
+    return `${year}-${formattedMonth}-${formattedDay}`;
   };
 
   // Button color and data changes
@@ -39,38 +52,35 @@ function Detail({ navigation }) {
   // Date navigation
   const handlePrevious = () => {
     setDateIndex(dateIndex - 1);
+    fetchDataAndUpdate();
   };
 
   const handleNext = () => {
-    setDateIndex(Math.min(0, dateIndex + 1));
-  };
-  const monthlyBudget = 1000; // Example monthly budget
-  const currentExpenses = 750; // Example current expenses
-
-  // Calculate the progress (percentage of expenses relative to budget)
-  const progress = currentExpenses / monthlyBudget;
-
-  useEffect(() => {
-    // Check if the user is logged in and has a valid UID
-    if (currentUser) {
-      // Fetch data from Firebase
-      fetchSavingData(currentUser.uid)
-        .then((data) => {
-          setFetchedData(data);
-          console.log( 'Data fetched from database:', data);
-        })
-        .catch((error) => {
-          console.error('Error fetching data:', error);
-        });
+    const today = new Date(); 
+      const nextDate = new Date(getDate(dateIndex + 1)); 
+      if (nextDate <= today) { 
+      setDateIndex(dateIndex + 1); 
+      fetchDataAndUpdate(); 
     }
-  }, [currentUser]);
+  };
+  
+  useEffect(() => {
+    if (!isMounted) {
+      setDateIndex(0);
+      setIsMounted(true);
+    }
+    fetchDataAndUpdate();
+  }, [isMounted]);
 
   useEffect(() => {
+    if (isMounted) {
+      fetchDataAndUpdate();
+    }
     // Call fetchDataAndUpdate when the screen mounts or when the fetchDataAndUpdate flag is true
     if (route.params && route.params.fetchDataAndUpdate) {
       fetchDataAndUpdate();
     }
-  }, [route.params]);
+  }, [route.params, dateIndex]);
 
   useFocusEffect(
       React.useCallback(() => {
@@ -86,8 +96,13 @@ function Detail({ navigation }) {
       // Fetch saving data from the database using the user's UID
       fetchSavingData(currentUser.uid)
         .then((data) => {
+          setTotalSavingAmount(data.totalSaved);
           // Update the state with the fetched saving data
-          setFetchedData(data);
+          const categorizedData = categorizeSavingEntries(data);
+          console.log(categorizedData)
+          const currentData = getEntriesForDate(categorizedData, getDate(dateIndex));
+          console.log('current data', currentData);
+          setFetchedData(currentData);
         })
         .catch((error) => {
           console.error('Error fetching saving data:', error);
@@ -97,6 +112,42 @@ function Detail({ navigation }) {
       
     }
   };
+
+    // Function to categorize saving entries by dates
+const categorizeSavingEntries = (savingEntries) => {
+  const categorizedData = {};
+  Object.values(savingEntries.savingEntries).forEach((entry) => {
+    const { date } = entry;
+    if (categorizedData[date]) {
+      categorizedData[date].push(entry);
+    } else {
+      categorizedData[date] = [entry];
+    }
+  });
+  return categorizedData;
+};
+
+const formatDateString = (dateString) => {
+  const [year, month, day] = dateString.split('-').map((component) => parseInt(component));
+  const formattedMonth = month.toString();
+  const formattedDay = day.toString();
+  return `${year}-${formattedMonth}-${formattedDay}`;
+};
+
+// Function to get entries for a specific date from categorized data
+const getEntriesForDate = (categorizedData, date) => {
+  // Check if the date exists as a key in categorizedData
+  const reformattedDate = formatDateString(date);
+
+  if (categorizedData[reformattedDate]) {
+    console.log('return data', categorizedData[reformattedDate]);
+    // If it exists, return the entries for that date
+    return categorizedData[reformattedDate];
+  } else {
+    console.log('no data');
+    return [];
+  }
+};
 
   const categories = [
     { id: 'Housing', iconName: require('../assets/housing.png'), color: '#D0C6E1' },
@@ -134,21 +185,21 @@ function Detail({ navigation }) {
       <View>
           <View style={styles.board}>
             <Text style={styles.boardLabel}>You have saved</Text>
-            <Text style={styles.amount}>${fetchedData.totalSaved}</Text>
+            <Text style={styles.amount}>${totalSavingAmount}</Text>
           </View>
         </View>
       <ScrollView style={styles.scrollView}>
         <View>
+        <Text style={styles.dateTextForData}>{getDate(dateIndex)}</Text>
           {fetchedData ? (
-            Object.keys(fetchedData.savingEntries).map((key, index) => {
-              const { date, category, moneyAdded, description } = fetchedData.savingEntries[key];
+            Object.keys(fetchedData).map((key, index) => {
+              const { date, category, moneyAdded, description } = fetchedData[key];
               const categoryInfo = categories.find((item) => item.id === category);
               const displayText = description?.trim() ? `${category}: ${description}` : category;
               if (!categoryInfo) return null; // Skip if category not found
               return(
                 <View key={index}>
                 <View style={styles.dataContainer}>
-                  <Text style={styles.dateText}>{date}</Text>
                   <View style={[styles.data, { backgroundColor: categoryInfo.color }]}>
                     <Image source={categoryInfo.iconName} style={styles.dataIcon} />
                     <View style={styles.dataText}>
@@ -272,6 +323,11 @@ const styles = StyleSheet.create({
   dataContainer: {
     justifyContent: 'center',
     paddingHorizontal: 10,
+  },
+  dateTextForData: {
+    fontSize: 15,
+    color: '#2d144b',
+    margin: 10,
   },
   data: {
     alignItems: 'center',
