@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../components/firebaseConfig";
-var uid = -1;
+export var uid = -1;
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");

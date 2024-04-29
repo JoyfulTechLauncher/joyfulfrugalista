@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Button } from "react-native";
 import {
   SafeAreaView,
@@ -8,14 +8,17 @@ import {
   StyleSheet,
 } from "react-native";
 import { Image } from "react-native";
-import auth from "@react-native-firebase/auth";
-import database from "@react-native-firebase/database";
+import axios from "axios";
 
+const URL =
+  "https://joyful-429b0-default-rtdb.asia-southeast1.firebasedatabase.app/";
 const colors = {
   //buttonColor: '#eb6c9c',
   buttonColor: "#f2c875",
   textColor: "#2d144b",
 };
+
+var profileList = [];
 
 const styles = StyleSheet.create({
   container: {
@@ -70,18 +73,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.buttonColor,
     borderRadius: 5,
     width: "52%",
-
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
     backgroundColor: colors.buttonColor,
     zIndex: 1,
     borderRadius: 20,
     paddingVertical: 5,
-    width: '95%',
-    alignSelf: 'center',
+    width: "95%",
+    alignSelf: "center",
     marginTop: -30,
   },
   transparentButton: {
@@ -110,23 +112,31 @@ const styles = StyleSheet.create({
   moreFunctionsContainer: {
     marginLeft: 45,
     marginRight: 65,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
   },
 });
 
-function Profile({ navigation }) {
-  //only trigger when meet some conditions
-  useEffect(() => {
-    const user = auth().currentUser;
+async function fetchProfile(uid) {
+  const response = await axios.get(URL + "/users/" + uid + ".json");
+  const userData = response.data;
 
-    if (!user) {
-      navigation.navigate("MyStack", { screen: "Login" });
-    } else {
-      const userRef = database().ref;
+  return userData;
+}
+
+function Profile({ navigation }) {
+  const [userData, setUserData] = useState(null);
+  useEffect(() => {
+    async function getData() {
+      const userData = await fetchProfile("0l7PnttYM4SDQj6wp95jD0xvv7z1");
+      setUserData(userData);
     }
+
+    getData();
   }, []);
+
+  console.log(userData);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -179,20 +189,16 @@ function Profile({ navigation }) {
         </View>
 
         <View style={styles.detailRow}>
-          <Text>ID</Text>
-          <Text>111</Text>
-        </View>
-        <View style={styles.detailRow}>
           <Text>Gender</Text>
-          <Text>Male</Text>
+          <Text>{userData.gender}</Text>
         </View>
         <View style={styles.detailRow}>
           <Text>Phone Number</Text>
-          <Text>(123) 456-789</Text>
+          <Text>{userData.phone}</Text>
         </View>
         <View style={styles.detailRow}>
           <Text>Email</Text>
-          <Text>tester@test.au</Text>
+          <Text>{userData.email}</Text>
         </View>
 
         <View style={{ height: 20 }} />
