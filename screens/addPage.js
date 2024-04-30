@@ -37,9 +37,9 @@ const App = () => {
     }
     else if (value === 'Date') {
       if (Platform.OS === 'ios') {
-        toggleDatePicker(); // 对于 iOS，显示模态
+        toggleDatePicker();
       } else {
-        showDatepicker(); // 对于安卓，直接显示选择器
+        showDatepicker();
       }
     }
     else if (value === 'Done') {
@@ -142,6 +142,7 @@ const App = () => {
                     title={category.title}
                     onPress={() => handleCategoryPress(category.id)}
                     color={category.color}
+                    isSelected={selectedCategory === category.id}
                 />
             ))}
           </View>
