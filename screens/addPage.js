@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
   },
   inputDisplay: {
     backgroundColor: '#29144A',
-    color: '#F6E9DC',
+    color: '#ffffff',
     fontSize: 30,
     paddingTop: 10,
     paddingRight: 20,
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
     borderColor: '#29144A',
     borderWidth: 1,
     margin: 10,
-    backgroundColor: '#F6E9DC',
+    backgroundColor: '#ffffff',
     color: '#29144A',
     padding: 5,
     marginHorizontal: 10, 
