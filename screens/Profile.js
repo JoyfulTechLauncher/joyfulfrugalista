@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Image } from "react-native";
 import axios from "axios";
+import { useFocusEffect } from "@react-navigation/native";
 
 const URL =
   "https://joyful-429b0-default-rtdb.asia-southeast1.firebasedatabase.app/";
@@ -119,7 +120,8 @@ const styles = StyleSheet.create({
 });
 
 async function fetchProfile(uid) {
-  const response = await axios.get(uid);
+  const str = URL + "users/" + uid + ".json";
+  const response = await axios.get(str);
   //console.log(response);
   const userData = response.data;
 
@@ -129,28 +131,39 @@ async function fetchProfile(uid) {
 function Profile({ navigation }) {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    async function getData() {
-      try {
-        const uid = "nOZIt4pQugMvmfPuGezK8nzZLmK2"; //
-        const str = URL + "users/" + uid + ".json";
-        console.log("" + str);
-        const userData = await fetchProfile(str);
-        setUserData(userData);
-        setLoading(false);
-      } catch (err) {
-        // console.log(err);//////////
-      }
-    }
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true; // 用于检查组件是否仍然挂载
 
-    getData();
-    console.log(userData);
-  }, []);
+      async function getData() {
+        try {
+          const uid = "nOZIt4pQugMvmfPuGezK8nzZLmK2";
+          const userData = await fetchProfile(uid);
+          if (isActive) {
+            setUserData(userData);
+            setLoading(false);
+          }
+        } catch (err) {
+          console.error(err); // 打印错误信息
+          if (isActive) {
+            setLoading(false); // 确保即使发生错误，加载状态也会更新
+          }
+        }
+      }
+
+      getData();
+
+      return () => {
+        isActive = false; // 当组件失去焦点或卸载时，更新此状态以避免在已卸载组件上设置状态
+      };
+    }, []) // useCallback 确保函数不会在每次渲染时重新创建，除非依赖数组中的元素变化
+  );
   //
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
+  console.log(userData);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
