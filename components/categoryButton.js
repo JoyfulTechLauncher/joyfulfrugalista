@@ -1,16 +1,18 @@
 import React from 'react';
 import { TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
 
-const housingIcon = require('../assets/housing.png');
-
-const CategoryButton = ({ iconName, title, onPress, color }) => {
-  const buttonStyles = [styles.button, { backgroundColor: color }];
+const CategoryButton = ({ iconName, title, onPress, color, isSelected }) => {
+  const buttonStyles = [
+    styles.button,
+    { backgroundColor: color },
+    isSelected && styles.selected // Apply selected style if isSelected is true
+  ];
 
   return (
-    <TouchableOpacity style={buttonStyles} onPress={onPress}>
-      <Image source={iconName} style={styles.icon} />
-      <Text style={styles.text}>{title}</Text>
-    </TouchableOpacity>
+      <TouchableOpacity style={buttonStyles} onPress={onPress}>
+        <Image source={iconName} style={styles.icon} />
+        <Text style={styles.text}>{title}</Text>
+      </TouchableOpacity>
   );
 };
 
@@ -21,8 +23,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '22%',
     height: 92,
-    // backgroundColor: '#D0C6E1',
-    borderRadius: 10,
+    borderRadius: 20,
     margin: 5,
   },
   icon: {
@@ -35,6 +36,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
   },
+  selected: {
+    borderColor: '#480076',
+    borderWidth: 2,
+  }
 });
 
 export default CategoryButton;
