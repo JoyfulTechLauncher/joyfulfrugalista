@@ -23,26 +23,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    margin: 6,
     minWidth: '20%',
-    borderWidth: 1,
-    borderColor: '#e1e1e1',
-    backgroundColor: '#f2f2f2',
-    // borderRadius: 10,
+    borderRadius: 10,
+    height: 60,
   },
   number: { // Style for number buttons
-    backgroundColor: '#FFF8DC',
+    backgroundColor: '#F6E9DC',
   },
   operator: { // Style for operators like +, -, etc.
-    backgroundColor: '#FFF8DC',
+    backgroundColor: '#F6E9DC',
   },
   date: { // Style for the date button
-    backgroundColor: '#FFF8DC',
+    backgroundColor: '#F6E9DC',
   },
   backspace: { // Style for the backspace button
-    backgroundColor: '#FFF8DC',
+    backgroundColor: '#F6E9DC',
   },
   done: { // Style for the done button
-    backgroundColor: '#FFCD29',
+    backgroundColor: '#F2C875',
   },
   buttonText: {
     fontSize: 20,

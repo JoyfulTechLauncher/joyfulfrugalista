@@ -14,6 +14,7 @@ function Detail({ navigation }) {
   const { currentUser } = useAuth();
   const [fetchedData, setFetchedData] = useState({ savingEntries: [], totalSaved: 0 });
   const [totalSavingAmount, setTotalSavingAmount] = useState(0);
+  const [dailySavingAmount, setDailySavingAmount] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
 
 
@@ -68,11 +69,13 @@ function Detail({ navigation }) {
     if (!isMounted) {
       setDateIndex(0);
       setIsMounted(true);
+      fetchDataAndUpdate();
     }
     fetchDataAndUpdate();
   }, [isMounted]);
 
   useEffect(() => {
+    fetchDataAndUpdate();
     if (isMounted) {
       fetchDataAndUpdate();
     }
@@ -97,11 +100,12 @@ function Detail({ navigation }) {
       fetchSavingData(currentUser.uid)
         .then((data) => {
           setTotalSavingAmount(data.totalSaved);
-          // Update the state with the fetched saving data
           const categorizedData = categorizeSavingEntries(data);
           console.log(categorizedData)
           const currentData = getEntriesForDate(categorizedData, getDate(dateIndex));
           console.log('current data', currentData);
+          setDailySavingAmount(calculateDailySavingAmount(currentData));
+          console.log('daily saving amount', dailySavingAmount);
           setFetchedData(currentData);
         })
         .catch((error) => {
@@ -149,6 +153,17 @@ const getEntriesForDate = (categorizedData, date) => {
   }
 };
 
+const calculateDailySavingAmount = (currentData) => {
+  let savingAmount = 0;
+
+  // Iterate over each entry in currentData
+  currentData.forEach((entry) => {
+    const moneyAdded = parseInt(entry.moneyAdded);
+    savingAmount += moneyAdded;
+  });
+  return savingAmount;
+};
+
   const categories = [
     { id: 'Housing', iconName: require('../assets/housing.png'), color: '#D0C6E1' },
     { id: 'Household', iconName: require('../assets/household.png'), color: '#F1EBF2' },
@@ -187,10 +202,13 @@ const getEntriesForDate = (categorizedData, date) => {
             <Text style={styles.boardLabel}>You have saved</Text>
             <Text style={styles.amount}>${totalSavingAmount}</Text>
           </View>
+          <View style={styles.subBoard}>
+            <Text style={styles.subBoardLabel}>You saved ${dailySavingAmount} today !</Text>
+          </View>
         </View>
       <ScrollView style={styles.scrollView}>
         <View>
-        <Text style={styles.dateTextForData}>{getDate(dateIndex)}</Text>
+          <Text style={styles.dateTextForData}>{getDate(dateIndex)}</Text>
           {fetchedData ? (
             Object.keys(fetchedData).map((key, index) => {
               const { date, category, moneyAdded, description } = fetchedData[key];
@@ -305,8 +323,10 @@ const styles = StyleSheet.create({
   board: {
     backgroundColor: '#f2c875',
     padding: 5,
-    borderRadius: 10,
+    borderTopLeftRadius: 10, 
+    borderTopRightRadius: 10,
     margin: 10,
+    marginBottom: 0,
     alignItems: 'center',
     height: 120,
   },
@@ -318,6 +338,23 @@ const styles = StyleSheet.create({
     color: '#2d144b',
     lineHeight: 35,
     fontSize: 30,
+    fontWeight: 'bold',
+  },
+  subBoard: {
+    backgroundColor: '#2d144b',
+    padding: 10,
+    borderBottomLeftRadius: 10, 
+    borderBottomRightRadius: 10,
+    marginHorizontal: 10,
+    marginTop: 0,
+    marginBottom: 10,
+    alignItems: 'left',
+    height: 40,
+  },
+  subBoardLabel: {
+    fontSize: 15,
+    color: '#f2c875',
+    marginLeft: 10,
     fontWeight: 'bold',
   },
   dataContainer: {
