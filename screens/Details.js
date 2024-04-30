@@ -71,9 +71,11 @@ function Detail({ navigation }) {
       setIsMounted(true);
       fetchDataAndUpdate();
     }
+    fetchDataAndUpdate();
   }, [isMounted]);
 
   useEffect(() => {
+    fetchDataAndUpdate();
     if (isMounted) {
       fetchDataAndUpdate();
     }
@@ -345,6 +347,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 10,
     marginHorizontal: 10,
     marginTop: 0,
+    marginBottom: 10,
     alignItems: 'left',
     height: 40,
   },
