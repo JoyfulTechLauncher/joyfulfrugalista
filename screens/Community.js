@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   activeMenuButton: {
-    backgroundColor: '#cb779b', 
+    backgroundColor: '#f2c875',
   },
   menuButtonText: {
     color: '#ffffff',
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   postCard: {
-    backgroundColor: '#cb779b',
+    backgroundColor: '#f2c875',
     borderRadius: 10,
     padding: 15,
     margin: 5,
