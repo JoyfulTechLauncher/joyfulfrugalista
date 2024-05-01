@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, Text, TextInput, StyleSheet, ScrollView, Alert, Modal, Platform, TouchableOpacity} from 'react-native';
+import {View, Text, TextInput, StyleSheet, ScrollView, Alert, Modal, Platform, TouchableOpacity, SafeAreaView} from 'react-native';
 import { useNavigation } from '@react-navigation/native'; 
 import CategoryButton from '../components/categoryButton';
 import CalculatorButton from '../components/calculatorButton';
@@ -37,9 +37,9 @@ const App = () => {
     }
     else if (value === 'Date') {
       if (Platform.OS === 'ios') {
-        toggleDatePicker(); // 对于 iOS，显示模态
+        toggleDatePicker();
       } else {
-        showDatepicker(); // 对于安卓，直接显示选择器
+        showDatepicker();
       }
     }
     else if (value === 'Done') {
@@ -142,28 +142,30 @@ const App = () => {
                     title={category.title}
                     onPress={() => handleCategoryPress(category.id)}
                     color={category.color}
+                    isSelected={selectedCategory === category.id}
                 />
             ))}
           </View>
 
-          {/* Display for the input value */}
-          <Text style={styles.inputDisplay}>{inputValue}</Text>
-
-          {/* Description input */}
-          <TextInput style={styles.descriptionInput} placeholder="Description" value={description} onChangeText={setDescription} />
-
-          {/* Numeric keypad */}
-          <View style={styles.keypad}>
-            {calculatorButtons.map((button) => (
-                <CalculatorButton
-                    key={button.label}
-                    label={button.label}
-                    onPress={handleButtonPress}
-                    type={button.type}
-                    imageSource={button.imageSource}
-                />
-            ))}
+          <View style={styles.inputContainer}>
+            {/* Display for the input value */}
+            <Text style={styles.inputDisplay}>{inputValue}</Text>
+            {/* Description input */}
+            <TextInput style={styles.descriptionInput} placeholder="Description" value={description} onChangeText={setDescription} />
           </View>
+          <SafeAreaView style={styles.keypadContainer}>
+            <View style={styles.keypad}>
+              {calculatorButtons.map((button) => (
+                  <CalculatorButton
+                      key={button.label}
+                      label={button.label}
+                      onPress={handleButtonPress}
+                      type={button.type}
+                      imageSource={button.imageSource}
+                  />
+              ))}
+            </View>
+          </SafeAreaView>
         </ScrollView>
 
         {/* iOS DatePicker Modal */}
@@ -232,7 +234,6 @@ const styles = StyleSheet.create({
   doneButton: {
     marginTop: 20,
     backgroundColor: '#f0f0f0', // Change this to your preferred button color
-    borderRadius: 10,
     padding: 10,
   },
   doneButtonText: {
@@ -259,22 +260,31 @@ const styles = StyleSheet.create({
     padding: 10,
     // Additional styles needed
   },
+  inputContainer: {
+    backgroundColor: '#29144A',
+  },
   inputDisplay: {
     backgroundColor: '#29144A',
-    color: '#FFFFFF',
+    color: '#ffffff',
     fontSize: 30,
-    padding: 10,
+    paddingTop: 10,
+    paddingRight: 20,
     textAlign: 'right',
   },
   descriptionInput: {
     height: 40,
     borderColor: '#29144A',
     borderWidth: 1,
-    margin: 20,
-    color: '#000000',
+    margin: 10,
+    backgroundColor: '#ffffff',
+    color: '#29144A',
     padding: 5,
-    marginHorizontal: 20, 
+    marginHorizontal: 10, 
     borderRadius: 10,
+  },
+  keypadContainer: {
+    backgroundColor: '#29144A',
+    marginBottom: 0,
   },
   keypad: {
     flexDirection: 'row',

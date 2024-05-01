@@ -2,35 +2,47 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
 
 const ForumPosts = () => {
-  
-  const posts = [
-    { id: '1', userName: 'User Name', likes: 300, title: 'Title', image: '../assets/post.png' },
-    { id: '2', userName: 'User Name', likes: 510, title: 'Title', image: '../assets/post.png' },
-    { id: '3', userName: 'User Name', likes: 160, title: 'Title', image: '../assets/post.png' },
-    { id: '4', userName: 'User Name', likes: 240, title: 'Title', image: '../assets/post.png' },
-    { id: '5', userName: 'User Name', likes: 60, title: 'Title', image: '../assets/post.png' },
-    { id: '6', userName: 'User Name', likes: 10, title: 'Title', image: '../assets/post.png' },
 
+  const imageMap = {
+    post1: require('../assets/post.png'),
+    post2: require('../assets/post.png'),
+    post3: require('../assets/post.png'),
+    post4: require('../assets/post.png'),
+    post5: require('../assets/post.png'),
+    post6: require('../assets/post.png'),
+    // Add all necessary images
+  };
+
+  const posts = [
+    { id: '1', userName: 'User Name', likes: 300, title: 'Title', image: 'post1' },
+    { id: '2', userName: 'User Name', likes: 510, title: 'Title', image: 'post2' },
+    { id: '3', userName: 'User Name', likes: 160, title: 'Title', image: 'post3' },
+    { id: '4', userName: 'User Name', likes: 240, title: 'Title', image: 'post4' },
+    { id: '5', userName: 'User Name', likes: 60, title: 'Title', image: 'post5' },
+    { id: '6', userName: 'User Name', likes: 10, title: 'Title', image: 'post6' },
+    // Map all posts accordingly
   ];
 
 
-  const renderPost = ({ item }) => (
-    <View style={styles.postCard}>
-      <View style={styles.userInfo}>
-        <Image style={styles.userAvatar} source={{ uri: item.image }} />
-        <Text style={styles.userName}>{item.userName}</Text>
-      </View>
-      <Image style={styles.postImage} source={{ uri: item.image }} />
-      <View style={styles.postFooter}>
-        <Text style={styles.postTitle}>{item.title}</Text>
-        <TouchableOpacity style={styles.likeButton}>
 
-          <Image source={require('../assets/like.png')} style={styles.likeIcon} />
-          <Text style={styles.likeCount}>{item.likes}</Text>
-        </TouchableOpacity>
+  const renderPost = ({ item }) => (
+      <View style={styles.postCard}>
+        <View style={styles.userInfo}>
+          <Image style={styles.userAvatar} source={imageMap[item.image]} />
+          <Text style={styles.userName}>{item.userName}</Text>
+        </View>
+        <Image style={styles.postImage} source={imageMap[item.image]} />
+        <View style={styles.postFooter}>
+          <Text style={styles.postTitle}>{item.title}</Text>
+          <TouchableOpacity style={styles.likeButton}>
+            <Image source={require('../assets/like.png')} style={styles.likeIcon} />
+            <Text style={styles.likeCount}>{item.likes}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
   );
+
+
 
   return (
     <View style={styles.container}>
@@ -87,7 +99,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   activeMenuButton: {
-    backgroundColor: '#cb779b', 
+    backgroundColor: '#f2c875',
   },
   menuButtonText: {
     color: '#ffffff',
@@ -102,7 +114,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   postCard: {
-    backgroundColor: '#cb779b',
+    backgroundColor: '#f2c875',
     borderRadius: 10,
     padding: 15,
     margin: 5,
