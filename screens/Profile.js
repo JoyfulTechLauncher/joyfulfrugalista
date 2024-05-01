@@ -137,7 +137,7 @@ function Profile({ navigation }) {
 
       async function getData() {
         try {
-          const uid = "nOZIt4pQugMvmfPuGezK8nzZLmK2";
+          const uid = "0l7PnttYM4SDQj6wp95jD0xvv7z1";
           const userData = await fetchProfile(uid);
           if (isActive) {
             setUserData(userData);
