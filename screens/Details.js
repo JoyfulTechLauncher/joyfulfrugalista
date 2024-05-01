@@ -73,26 +73,26 @@ function Detail({ navigation }) {
       setIsMounted(true);
       fetchDataAndUpdate();
     }
-    fetchDataAndUpdate();
   }, [isMounted]);
 
   useEffect(() => {
-    fetchDataAndUpdate();
     if (isMounted) {
       fetchDataAndUpdate();
     }
     // Call fetchDataAndUpdate when the screen mounts or when the fetchDataAndUpdate flag is true
     if (route.params && route.params.fetchDataAndUpdate) {
+      setDateIndex(0);
       fetchDataAndUpdate();
     }
   }, [route.params, dateIndex]);
 
   useFocusEffect(
-    React.useCallback(() => {
-      fetchDataAndUpdate();
-      // No cleanup action needed, but you could return a cleanup function if necessary
-      return () => {};
-    }, [currentUser])
+      React.useCallback(() => {
+        setDateIndex(0);
+        fetchDataAndUpdate();
+        // No cleanup action needed, but you could return a cleanup function if necessary
+        return () => {};
+      }, [currentUser])
   );
 
   const fetchDataAndUpdate = () => {
@@ -103,21 +103,16 @@ function Detail({ navigation }) {
         .then((data) => {
           setTotalSavingAmount(data.totalSaved);
           const categorizedData = categorizeSavingEntries(data);
-          console.log(categorizedData);
-          const currentData = getEntriesForDate(
-            categorizedData,
-            getDate(dateIndex)
-          );
-          console.log("current data", currentData);
+          console.log(categorizedData)
+          const currentData = getEntriesForDate(categorizedData, getDate(dateIndex));
           setDailySavingAmount(calculateDailySavingAmount(currentData));
-          console.log("daily saving amount", dailySavingAmount);
           setFetchedData(currentData);
         })
         .catch((error) => {
           console.error("Error fetching saving data:", error);
         });
     } else {
-      console.log("User is not logged in");
+      console.log('User is not logged in');
     }
   };
 
@@ -144,20 +139,17 @@ function Detail({ navigation }) {
     return `${year}-${formattedMonth}-${formattedDay}`;
   };
 
-  // Function to get entries for a specific date from categorized data
-  const getEntriesForDate = (categorizedData, date) => {
-    // Check if the date exists as a key in categorizedData
-    const reformattedDate = formatDateString(date);
-
-    if (categorizedData[reformattedDate]) {
-      console.log("return data", categorizedData[reformattedDate]);
-      // If it exists, return the entries for that date
-      return categorizedData[reformattedDate];
-    } else {
-      console.log("no data");
-      return [];
-    }
-  };
+// Function to get entries for a specific date from categorized data
+const getEntriesForDate = (categorizedData, date) => {
+  // Check if the date exists as a key in categorizedData
+  const reformattedDate = formatDateString(date);
+  if (categorizedData[reformattedDate]) {
+    // If it exists, return the entries for that date
+    return categorizedData[reformattedDate];
+  } else {
+    return [];
+  }
+};
 
   const calculateDailySavingAmount = (currentData) => {
     let savingAmount = 0;
