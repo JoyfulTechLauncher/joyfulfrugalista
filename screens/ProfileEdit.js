@@ -46,7 +46,6 @@ async function updateProfile(uid, newData) {
 
 //TODO:  (1.type check 2. no empty fields check)
 const EditProfileScreen = ({ route, navigation }) => {
-  console.log(route.params.otherParam.name);
   const [username, setUsername] = useState(route.params.otherParam?.name || "");
   const [phone, setPhone] = useState(route.params.otherParam?.phone || "");
   const [email, setEmail] = useState(route.params.otherParam?.email || "");
@@ -84,7 +83,7 @@ const EditProfileScreen = ({ route, navigation }) => {
     <View style={styles.container}>
       <TextInput
         style={styles.inputContainer}
-        placeholder={username}
+        placeholder="username"
         placeholderTextColor={styles.placeholderColor.color}
         onChangeText={setUsername}
         value={username}
@@ -93,7 +92,7 @@ const EditProfileScreen = ({ route, navigation }) => {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder={phone}
+          placeholder="phone"
           placeholderTextColor={styles.placeholderColor.color}
           onChangeText={setPhone}
           value={phone}
@@ -107,7 +106,7 @@ const EditProfileScreen = ({ route, navigation }) => {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder={goal}
+          placeholder="goal"
           placeholderTextColor={styles.placeholderColor.color}
           onChangeText={setGoal}
           value={goal}
