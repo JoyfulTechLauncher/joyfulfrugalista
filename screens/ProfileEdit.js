@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   Image,
 } from 'react-native';
 import axios from 'axios';
+import * as ImagePicker from 'expo-image-picker';
 import { uid } from './Login.js';
 
 const URL = 'https://joyful-429b0-default-rtdb.asia-southeast1.firebasedatabase.app/';
@@ -25,10 +26,34 @@ async function updateProfile(uid, newData) {
 }
 
 const EditProfileScreen = ({ route, navigation }) => {
+  const [avatar, setAvatar] = useState(null);
   const [username, setUsername] = useState(route.params.otherParam?.name || '');
   const [phone, setPhone] = useState(route.params.otherParam?.phone || '');
   const [email, setEmail] = useState(route.params.otherParam?.email || '');
   const [goal, setGoal] = useState(route.params.otherParam?.goal || '');
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
+      }
+    })();
+  }, []);
+
+  const handleChooseAvatar = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+  
+    if (!result.cancelled && result.assets && result.assets.length > 0) {
+      setAvatar({ uri: result.assets[0].uri });
+    }
+  };
+  
 
   const handleSave = async () => {
     const userDataToUpdate = {
@@ -47,16 +72,21 @@ const EditProfileScreen = ({ route, navigation }) => {
     }
   };
 
-  const sendVerificationCode = (field) => {
-    Alert.alert(`Verification Code Sent`, `A verification code has been sent to your ${field}.`);
-  };
-
   const clearInput = (setFunction) => {
     setFunction('');
   };
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={handleChooseAvatar} style={styles.avatarContainer}>
+    <Image
+      source={avatar || require('../assets/portrait.png')}
+      style={styles.avatar}
+    />
+    <View style={styles.overlay}>
+      <Text style={styles.overlayText}>Edit</Text>
+    </View>
+  </TouchableOpacity>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Username</Text>
         <TextInput
@@ -133,6 +163,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: 'white',
+    alignItems: 'center', 
   },
   inputContainer: {
     flexDirection: 'row',
@@ -143,6 +174,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     height: 50,
+  },
+  avatarContainer: {
+    height: 120,
+    width: 120,
+    borderRadius: 60,
+    overflow: 'hidden',
+    marginBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',  
   },
   input: {
     flex: 1,
@@ -162,6 +203,33 @@ const styles = StyleSheet.create({
   icon: {
     width: 15,
     height: 15,
+  },
+  avatarContainer: {
+    height: 120,
+    width: 120,
+    borderRadius: 60,
+    overflow: 'hidden',
+    marginBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatar: {
+    height: '100%',
+    width: '100%',
+  },
+  overlay: {
+    position: 'absolute', 
+    bottom: 0,  
+    height: '25%',  
+    width: '100%',  
+    backgroundColor: 'rgba(0,0,0,0.5)',  
+    justifyContent: 'center',  
+    alignItems: 'center',  
+    borderBottomLeftRadius: 60,  
+    borderBottomRightRadius: 60,  
+  },
+  overlayText: {
+    color: 'white', 
   },
 });
 
