@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Button } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Button, ActivityIndicator } from "react-native";
 import {
   SafeAreaView,
   ScrollView,
@@ -8,6 +8,12 @@ import {
   StyleSheet,
 } from "react-native";
 import { Image } from "react-native";
+import axios from "axios";
+import { useFocusEffect } from "@react-navigation/native";
+import { uid } from "./Login.js";
+
+const URL =
+  "https://joyful-429b0-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
 const colors = {
   //buttonColor: '#eb6c9c',
@@ -68,18 +74,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.buttonColor,
     borderRadius: 5,
     width: "52%",
-
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
     backgroundColor: colors.buttonColor,
     zIndex: 1,
     borderRadius: 20,
     paddingVertical: 5,
-    width: '95%',
-    alignSelf: 'center',
+    width: "95%",
+    alignSelf: "center",
     marginTop: -30,
   },
   transparentButton: {
@@ -108,13 +113,58 @@ const styles = StyleSheet.create({
   moreFunctionsContainer: {
     marginLeft: 45,
     marginRight: 65,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
   },
 });
 
+async function fetchProfile(uid) {
+  const str = URL + "users/" + uid + ".json";
+  const response = await axios.get(str);
+  //console.log(response);
+  const userData = response.data;
+
+  return userData;
+}
+
 function Profile({ navigation }) {
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+
+      async function getData() {
+        try {
+          //const uid1 = "TKUesaNLmKaCkop8Urb0AL6uFy02";
+          const userData = await fetchProfile(uid);
+          if (isActive) {
+            setUserData(userData);
+            setLoading(false);
+          }
+        } catch (err) {
+          console.error(err);
+          if (isActive) {
+            setLoading(false);
+          }
+        }
+      }
+
+      getData();
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+  //防止在未得到数据前提前渲染
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+  //console.log(userData);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -125,15 +175,15 @@ function Profile({ navigation }) {
               style={styles.profileImage}
             />
 
-            <Text style={styles.userNameText}>Tester Tester</Text>
+            <Text style={styles.userNameText}>
+              {userData ? userData.name : "Not set"}
+            </Text>
             <View style={{ flex: 1 }} />
             <TouchableOpacity
               style={styles.transparentButton}
-              onPress={() =>
-                navigation.navigate("   ", { screen: "Login" })
-              }
+              onPress={() => navigation.navigate("   ", { screen: "Login" })}
             >
-              <Text style={styles.userNameText}>Login</Text>
+              <Text style={styles.userNameText}>Log out</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -151,7 +201,17 @@ function Profile({ navigation }) {
             <Text style={styles.icon}>👥</Text>
             <Text style={styles.buttonText}>Invite Friends</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.transparentButton}>
+          <TouchableOpacity
+            style={styles.transparentButton}
+            onPress={() =>
+              navigation.navigate("   ", {
+                screen: "ProfileEdit",
+                params: {
+                  otherParam: userData,
+                },
+              })
+            }
+          >
             <Text style={styles.icon}>⚙️</Text>
             <Text style={styles.buttonText}>Settings</Text>
           </TouchableOpacity>
@@ -161,24 +221,18 @@ function Profile({ navigation }) {
 
         <View style={styles.banner}>
           <Text style={styles.buttonText}>Your Monthly Saving Goal</Text>
-          <Text style={styles.savingGoalText}>$400</Text>
+          <Text style={styles.savingGoalText}>
+            {userData ? `$${userData.goal}` : "Not set"}
+          </Text>
         </View>
 
         <View style={styles.detailRow}>
-          <Text>ID</Text>
-          <Text>111</Text>
-        </View>
-        <View style={styles.detailRow}>
-          <Text>Gender</Text>
-          <Text>Male</Text>
-        </View>
-        <View style={styles.detailRow}>
           <Text>Phone Number</Text>
-          <Text>(123) 456-789</Text>
+          <Text>{userData ? userData.phone : "Not set"}</Text>
         </View>
         <View style={styles.detailRow}>
           <Text>Email</Text>
-          <Text>tester@test.au</Text>
+          <Text>{userData ? userData.email : "Not set"}</Text>
         </View>
 
         <View style={{ height: 20 }} />
