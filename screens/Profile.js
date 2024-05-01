@@ -181,7 +181,7 @@ function Profile({ navigation }) {
             <View style={{ flex: 1 }} />
             <TouchableOpacity
               style={styles.transparentButton}
-              onPress={() => navigation.navigate("   ", { screen: "Login" })}
+              onPress={() => navigation.replace("   ", { screen: "Login" })}
             >
               <Text style={styles.userNameText}>Log out</Text>
             </TouchableOpacity>

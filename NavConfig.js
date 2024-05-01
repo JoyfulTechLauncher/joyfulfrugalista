@@ -123,6 +123,11 @@ function AppNav() {
   return (
     <Stack.Navigator>
       <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{ headerShown: false }} // 可以选择隐藏登录页的头部
+      />
+      <Stack.Screen
         name="Tab"
         component={MyTabs}
         options={{ headerShown: false }}
