@@ -17,7 +17,9 @@ const Login = ({ navigation }) => {
         uid = userCredential.user.uid;
         setUser({ uid: userCredential.user.uid });
         console.log("User UID:", uid);
-        // navigation.navigate('MyTabs');
+          navigation.navigate('Tab', {
+              screen: 'Details',
+          });
       })
       .catch((error) => {
         Alert.alert("Login failed", error.message);
