@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import RNPickerSelect from "react-native-picker-select";
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,48 +7,28 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-} from "react-native";
-import axios from "axios";
-import { uid } from "./Login.js";
-const URL =
-  "https://joyful-429b0-default-rtdb.asia-southeast1.firebasedatabase.app/";
+  Image,
+} from 'react-native';
+import axios from 'axios';
+import { uid } from './Login.js';
 
-const pickerStyle = {
-  inputIOS: {
-    paddingHorizontal: 0,
-    borderWidth: 0,
-    borderRadius: 0,
-    color: "black",
-    paddingRight: 30,
-    height: "100%", // 确保填满容器高度
-  },
-  inputAndroid: {
-    paddingHorizontal: 0,
-    borderWidth: 0,
-    borderRadius: 0,
-    color: "black",
-    paddingRight: 30,
-    height: "100%", // 确保填满容器高度
-  },
-};
+const URL = 'https://joyful-429b0-default-rtdb.asia-southeast1.firebasedatabase.app/';
 
 async function updateProfile(uid, newData) {
-  const str = URL + "users/" + uid + ".json";
+  const str = URL + 'users/' + uid + '.json';
   console.log(str);
   try {
     const response = await axios.patch(str, newData);
   } catch (error) {
-    console.error("error2");
+    console.error('error2');
   }
-  //console.log(response);
 }
 
-//TODO:  (1.type check 2. no empty fields check)
 const EditProfileScreen = ({ route, navigation }) => {
-  const [username, setUsername] = useState(route.params.otherParam?.name || "");
-  const [phone, setPhone] = useState(route.params.otherParam?.phone || "");
-  const [email, setEmail] = useState(route.params.otherParam?.email || "");
-  const [goal, setGoal] = useState(route.params.otherParam?.goal || "");
+  const [username, setUsername] = useState(route.params.otherParam?.name || '');
+  const [phone, setPhone] = useState(route.params.otherParam?.phone || '');
+  const [email, setEmail] = useState(route.params.otherParam?.email || '');
+  const [goal, setGoal] = useState(route.params.otherParam?.goal || '');
 
   const handleSave = async () => {
     const userDataToUpdate = {
@@ -60,75 +39,88 @@ const EditProfileScreen = ({ route, navigation }) => {
     };
     try {
       await updateProfile(uid, userDataToUpdate);
-      Alert.alert(
-        "Profile Updated",
-        "Your profile has been successfully updated.",
-        [{ text: "OK", onPress: () => navigation.goBack() }]
-      );
+      Alert.alert('Profile Updated', 'Your profile has been successfully updated.', [
+        { text: 'OK', onPress: () => navigation.goBack() },
+      ]);
     } catch (error) {
       console.error(error);
     }
   };
 
   const sendVerificationCode = (field) => {
-    Alert.alert(
-      `Verification Code Sent`,
-      `A verification code has been sent to your ${field}.`
-    );
+    Alert.alert(`Verification Code Sent`, `A verification code has been sent to your ${field}.`);
   };
 
-  console.log(typeof username);
-  console.log(username);
+  const clearInput = (setFunction) => {
+    setFunction('');
+  };
+
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.inputContainer}
-        placeholder="username"
-        placeholderTextColor={styles.placeholderColor.color}
-        onChangeText={setUsername}
-        value={username}
-      />
-
       <View style={styles.inputContainer}>
+        <Text style={styles.label}>Username</Text>
         <TextInput
           style={styles.input}
-          placeholder="phone"
+          placeholder="Username"
+          placeholderTextColor={styles.placeholderColor.color}
+          onChangeText={setUsername}
+          value={username}
+        />
+        {username && (
+          <TouchableOpacity onPress={() => clearInput(setUsername)} style={styles.clearButton}>
+            <Image source={require('../assets/close.png')} style={styles.icon} />
+          </TouchableOpacity>
+        )}
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Phone</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Phone Number"
           placeholderTextColor={styles.placeholderColor.color}
           onChangeText={setPhone}
           value={phone}
           keyboardType="phone-pad"
         />
-        <TouchableOpacity
-          onPress={() => sendVerificationCode("phone")}
-          style={styles.button}
-        ></TouchableOpacity>
+        {phone && (
+          <TouchableOpacity onPress={() => clearInput(setPhone)} style={styles.clearButton}>
+            <Image source={require('../assets/close.png')} style={styles.icon} />
+          </TouchableOpacity>
+        )}
       </View>
+
       <View style={styles.inputContainer}>
+        <Text style={styles.label}>Email</Text>
         <TextInput
           style={styles.input}
-          placeholder="goal"
+          placeholder="Email Address"
+          placeholderTextColor={styles.placeholderColor.color}
+          value={email}
+          onChangeText={setEmail}
+        />
+        {email && (
+          <TouchableOpacity onPress={() => clearInput(setEmail)} style={styles.clearButton}>
+            <Image source={require('../assets/close.png')} style={styles.icon} />
+          </TouchableOpacity>
+        )}
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Saving Goal</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="How Much You Want to Save?"
           placeholderTextColor={styles.placeholderColor.color}
           onChangeText={setGoal}
           value={goal}
           keyboardType="decimal-pad"
         />
-        <TouchableOpacity
-          onPress={() => sendVerificationCode("phone")}
-          style={styles.button}
-        ></TouchableOpacity>
-      </View>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor={styles.placeholderColor.color}
-          value={email}
-          onChangeText={setEmail}
-        />
-        <TouchableOpacity
-          onPress={() => sendVerificationCode("email")}
-          style={styles.button}
-        ></TouchableOpacity>
+        {goal && (
+          <TouchableOpacity onPress={() => clearInput(setGoal)} style={styles.clearButton}>
+            <Image source={require('../assets/close.png')} style={styles.icon} />
+          </TouchableOpacity>
+        )}
       </View>
 
       <Button title="Save Profile" onPress={handleSave} color="#841584" />
@@ -140,34 +132,36 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#EBCA81",
+    backgroundColor: 'white',
   },
   inputContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center", // 确保子项垂直居中
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 10,
-    borderWidth: 0,
-    borderColor: "gray",
+    borderWidth: 1,
+    borderColor: 'lightgrey',
     borderRadius: 10,
     padding: 10,
     height: 50,
-    overflow: "hidden",
-    backgroundColor: "#fae8be",
   },
-
   input: {
     flex: 1,
     marginRight: 10,
-    height: "100%",
+    height: '100%',
   },
-
-  buttonText: {
-    fontWeight: "bold",
-    color: "white",
+  label: {
+    fontWeight: 'bold',
+    marginRight: 10,
   },
   placeholderColor: {
-    color: "#CECCCB",
+    color: '#CECCCB',
+  },
+  clearButton: {
+    padding: 5,
+  },
+  icon: {
+    width: 15,
+    height: 15,
   },
 });
 
