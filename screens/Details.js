@@ -1,17 +1,11 @@
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  Platform,
-} from "react-native";
-import React, { useState, useEffect } from "react";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { ScrollView } from "react-native-gesture-handler";
-import { fetchSavingData } from "../components/FirebaseDatabase";
-import { useAuth } from "../components/AuthContext";
-import { useFocusEffect } from "@react-navigation/native";
+import { StyleSheet,View, Text, TouchableOpacity, Image, Platform} from "react-native";
+import React, { useState, useEffect  } from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { fetchSavingData } from '../components/FirebaseDatabase';
+import { useAuth } from '../components/AuthContext';
+import { useFocusEffect } from '@react-navigation/native';
+import { categories } from '../screens/addPage'
 
 function Detail({ navigation }) {
   const route = useRoute();
@@ -168,62 +162,13 @@ function Detail({ navigation }) {
   const calculateDailySavingAmount = (currentData) => {
     let savingAmount = 0;
 
-    // Iterate over each entry in currentData
-    currentData.forEach((entry) => {
-      const moneyAdded = parseInt(entry.moneyAdded);
-      savingAmount += moneyAdded;
-    });
-    return savingAmount;
-  };
-
-  const categories = [
-    {
-      id: "Housing",
-      iconName: require("../assets/housing.png"),
-      color: "#D0C6E1",
-    },
-    {
-      id: "Household",
-      iconName: require("../assets/household.png"),
-      color: "#F1EBF2",
-    },
-    {
-      id: "Utilities",
-      iconName: require("../assets/utilities.png"),
-      color: "#C4D3EB",
-    },
-    {
-      id: "Transport",
-      iconName: require("../assets/transport.png"),
-      color: "#D0ECF3",
-    },
-    { id: "Food", iconName: require("../assets/food.png"), color: "#BCE1D6" },
-    {
-      id: "Health",
-      iconName: require("../assets/health.png"),
-      color: "#C5E1BA",
-    },
-    {
-      id: "Education",
-      iconName: require("../assets/education.png"),
-      color: "#F5C4DB",
-    },
-    {
-      id: "Appearance",
-      iconName: require("../assets/appearance.png"),
-      color: "#F7E8E4",
-    },
-    {
-      id: "Lifestyle",
-      iconName: require("../assets/lifestyle.png"),
-      color: "#F4EB85",
-    },
-    {
-      id: "Service Fee",
-      iconName: require("../assets/service fee.png"),
-      color: "#FFD6A1",
-    },
-  ];
+  // Iterate over each entry in currentData
+  currentData.forEach((entry) => {
+    const moneyAdded = parseInt(entry.moneyAdded);
+    savingAmount += moneyAdded;
+  });
+  return savingAmount;
+};
 
   // Render the component's UI
   return (
