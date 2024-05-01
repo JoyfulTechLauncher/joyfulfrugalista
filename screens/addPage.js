@@ -7,6 +7,28 @@ import { useAuth } from '../components/AuthContext';
 import { addEntryToDatabase } from '../components/FirebaseDatabase';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
+export const categories = [
+  { id: 'Housing', title: 'Housing', iconName: require('../assets/housing.png'), color: '#D0C6E1' },
+  { id: 'Household', title: 'Household', iconName: require('../assets/household.png'), color: '#F1EBF2' },
+  { id: 'Utilities', title: 'Utilities', iconName: require('../assets/utilities.png'), color: '#C4D3EB' },
+  { id: 'Transport', title: 'Transport', iconName: require('../assets/transport.png'), color: '#D0ECF3' },
+  { id: 'Leisure', title: 'Leisure', iconName: require('../assets/leisure.png'), color: '#D6E4F2' },
+  { id: 'Holidays', title: 'Holidays', iconName: require('../assets/holidays.png'), color: '#BCE1D6'},
+  { id: 'Wellbeing', title: 'Wellbeing', iconName: require('../assets/wellbeing.png'), color: '#E6D6FF' },
+  { id: 'Education', title: 'Education', iconName: require('../assets/education.png'), color: '#F5C4DB' },
+  { id: 'Grooming', title: 'Grooming', iconName: require('../assets/grooming.png'), color: '#E8CCFF' },
+  { id: 'Gifts', title: 'Gifts', iconName: require('../assets/gifts.png'), color: '#FFCCCC' },
+  { id: 'Christmas', title: 'Christmas', iconName: require('../assets/christmas.png'), color: '#CCF5E1' },
+  { id: 'Insurence', title: 'Insurance', iconName: require('../assets/insurance.png'), color: '#F7E8E4' },
+  { id: 'Childcare', title: 'Childcare', iconName: require('../assets/childcare.png'), color: '#FFE6CC' },
+  { id: 'Food', title: 'Food', iconName: require('../assets/food.png'), color: '#BCE1D6' },
+  { id: 'Health', title: 'Health', iconName: require('../assets/health.png'), color: '#C5E1BA' },
+  { id: 'Appearance', title: 'Appearance', iconName: require('../assets/appearance.png'), color: '#F7E8E4' },
+  { id: 'Lifestyle', title: 'Lifestyle', iconName: require('../assets/lifestyle.png'), color: '#F4EB85' },
+  { id: 'Treat yourself', title: 'Treat yourself', iconName: require('../assets/treatyourself.png'), color: '#F0EAD6' }, // Treat yourself == others
+  // add more categories as needed
+];
+
 const App = () => {
   const navigation = useNavigation();
   const [inputValue, setInputValue] = useState('0');
@@ -52,7 +74,7 @@ const App = () => {
       setInputValue(String(result));
       if (currentUser && currentUser.uid && description.trim()) {
         const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-        const categoryToSave = selectedCategory ?? "Others";
+        const categoryToSave = selectedCategory ?? categories[17].id;
         addEntryToDatabase(currentUser.uid, formattedDate, result, categoryToSave, description)
             .then(() => {
               Alert.alert("Added successfully!");
@@ -114,20 +136,6 @@ const App = () => {
     setSelectedCategory(category);
     console.log('Category selected:', category);
   };
-
-  const categories = [
-    { id: 'Housing', title: 'Housing', iconName: require('../assets/housing.png'), color: '#D0C6E1' },
-    { id: 'Household', title: 'Household', iconName: require('../assets/household.png'), color: '#F1EBF2' },
-    { id: 'Utilities', title: 'Utilities', iconName: require('../assets/utilities.png'), color: '#C4D3EB' },
-    { id: 'Transport', title: 'Transport', iconName: require('../assets/transport.png'), color: '#D0ECF3' },
-    { id: 'Food', title: 'Food', iconName: require('../assets/food.png'), color: '#BCE1D6' },
-    { id: 'Health', title: 'Health', iconName: require('../assets/health.png'), color: '#C5E1BA' },
-    { id: 'Education', title: 'Education', iconName: require('../assets/education.png'), color: '#F5C4DB' },
-    { id: 'Appearance', title: 'Appearance', iconName: require('../assets/appearance.png'), color: '#F7E8E4' },
-    { id: 'Lifestyle', title: 'Lifestyle', iconName: require('../assets/lifestyle.png'), color: '#F4EB85' },
-    { id: 'Service Fee', title: 'Service Fee', iconName: require('../assets/service fee.png'), color: '#FFD6A1' },
-    // maybe need more info
-  ];
 
   return (
       <View style={styles.container}>
