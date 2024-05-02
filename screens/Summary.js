@@ -331,18 +331,47 @@ const App = () => {
     }
   };
 
+  const topButtonStyle = {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderRadius: 5,
+    marginHorizontal: 1,
+  };
+
+  const topButtonText = {
+    color: '#2d144b',
+    fontSize: 14,
+  };
+
+  const activeButton = {
+    flex: 1,
+    backgroundColor: '#603a6b',
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderRadius: 5,
+    marginHorizontal: 1,
+  };
+
+  const activeButtonText = {
+    color: '#fff',
+    fontSize: 14,
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         <View style={styles.timePeriodSelector}>
-          <TouchableOpacity style={styles.topbuttonStyle} onPress={() => updatePeriodAndIndex('Week')}>
-            <Text style={styles.topbuttonText}>Weekly</Text>
+          <TouchableOpacity style={timePeriod === 'Week' ? activeButton : topButtonStyle} 
+          onPress={() => updatePeriodAndIndex('Week')}>
+            <Text style={timePeriod === 'Week' ? activeButtonText : topButtonText}>Weekly</Text>
           </TouchableOpacity>
           {/*<TouchableOpacity style={styles.topbuttonStyle} onPress={() => updatePeriodAndIndex('Month')}>
             <Text style={styles.topbuttonText}>Monthly</Text>
           </TouchableOpacity>*/}
-          <TouchableOpacity style={styles.topbuttonStyle} onPress={() => updatePeriodAndIndex('Year')}>
-            <Text style={styles.topbuttonText}>Annually</Text>
+          <TouchableOpacity style={timePeriod === 'Year' ? activeButton : topButtonStyle}  onPress={() => updatePeriodAndIndex('Year')}>
+            <Text style={timePeriod === 'Year' ? activeButtonText : topButtonText}>Annually</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -350,7 +379,11 @@ const App = () => {
         <TouchableOpacity style={styles.buttonStyle} onPress={handlePrevious}>
           <Text style={styles.buttonText}>&lt;</Text>
           </TouchableOpacity>
-        <Text style={styles.periodText}>{timePeriod} {periodIndex}</Text>
+          {timePeriod === 'Week' ? (
+            <Text style={styles.periodText}>{periodIndex} week ago</Text>
+          ) : (
+            <Text style={styles.periodText}>{periodIndex}</Text>
+          )}
         <TouchableOpacity style={styles.buttonStyle} onPress={handleNext}>
           <Text style={styles.buttonText}>&gt;</Text>
         </TouchableOpacity>
@@ -417,7 +450,7 @@ const styles = StyleSheet.create({
   },
   periodText: {
     fontSize: 16,
-    color: '#f2c875',
+    color: '#2d144b',
     fontWeight: 'bold',
   },
   chart: {
@@ -425,19 +458,6 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderRadius: 16,
     alignSelf: 'center',
-  },
-  topbuttonStyle: {
-    backgroundColor: '#603a6b',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 15,
-  },
-  topbuttonText: {
-    color: '#fff',
-    fontSize: 16,
   },
   summaryBox: {
     margin: 10,
@@ -457,7 +477,6 @@ const styles = StyleSheet.create({
     marginTop: 18,
   },
 });
-
 const chartConfig = {
   backgroundColor: '#eb6c9c',
   backgroundGradientFrom: '#eb6c9c',

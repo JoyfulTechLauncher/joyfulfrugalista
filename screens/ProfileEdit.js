@@ -153,7 +153,9 @@ const EditProfileScreen = ({ route, navigation }) => {
         )}
       </View>
 
-      <Button title="Save Profile" onPress={handleSave} color="#841584" />
+      <TouchableOpacity style = {styles.saveButton} onPress={handleSave}>
+        <Text style={styles.saveButtonText}>Save Profile</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -231,6 +233,16 @@ const styles = StyleSheet.create({
   overlayText: {
     color: 'white', 
   },
+  saveButton : {
+    backgroundColor: '#2d144b',
+    padding: 10,
+    margin: 20,
+    borderRadius: 10,
+  },
+  saveButtonText : {
+    color: 'white',
+    fontSize: 16,
+  }
 });
 
 export default EditProfileScreen;

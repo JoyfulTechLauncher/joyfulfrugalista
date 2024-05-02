@@ -54,9 +54,22 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
   },
+  logOutButton: {
+    textColor: "white",
+    backgroundColor:"#603A6B",
+    padding: 10,
+    fontSize: 18,
+    borderRadius: 10,
+  },
+  logOutButtonText: {
+    color: "white",
+    fontSize: 15,
+  },
   savingGoalText: {
     color: colors.textColor,
     fontSize: 22,
+    marginTop: 10,
+    fontWeight: "bold",
   },
   detailRow: {
     flexDirection: "row",
@@ -74,12 +87,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.buttonColor,
     borderRadius: 5,
     width: "52%",
+    height: 50,
   },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    backgroundColor: colors.buttonColor,
+    backgroundColor: "#603A6B",
     zIndex: 1,
     borderRadius: 20,
     paddingVertical: 5,
@@ -94,6 +108,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: "transparent",
+  },
+  transparentButtonText: {
+    color: "white",
+    fontSize: 12,
+    marginTop: 4,
+    textAlign: "center",
   },
   icon: {
     fontSize: 24,
@@ -180,10 +200,10 @@ function Profile({ navigation }) {
             </Text>
             <View style={{ flex: 1 }} />
             <TouchableOpacity
-              style={styles.transparentButton}
+              style={styles.logOutButton}
               onPress={() => navigation.replace("   ", { screen: "Login" })}
             >
-              <Text style={styles.userNameText}>Log out</Text>
+              <Text style={styles.logOutButtonText}>Log out</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -191,15 +211,15 @@ function Profile({ navigation }) {
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.transparentButton}>
             <Text style={styles.icon}>🌟</Text>
-            <Text style={styles.buttonText}>Achievements</Text>
+            <Text style={styles.transparentButtonText}>Achievements</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.transparentButton}>
             <Text style={styles.icon}>🔔</Text>
-            <Text style={styles.buttonText}>Notifications</Text>
+            <Text style={styles.transparentButtonText}>Notifications</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.transparentButton}>
             <Text style={styles.icon}>👥</Text>
-            <Text style={styles.buttonText}>Invite Friends</Text>
+            <Text style={styles.transparentButtonText}>Invite Friends</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.transparentButton}
@@ -213,7 +233,7 @@ function Profile({ navigation }) {
             }
           >
             <Text style={styles.icon}>⚙️</Text>
-            <Text style={styles.buttonText}>Settings</Text>
+            <Text style={styles.transparentButtonText}>Settings</Text>
           </TouchableOpacity>
         </View>
 
@@ -240,10 +260,10 @@ function Profile({ navigation }) {
         <View style={styles.moreFunctionsContainer}>
           <View style={styles.row}>
             <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Customize Categories</Text>
+              <Text style={styles.buttonText}>Categories</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Saving Plan</Text>
+              <Text style={styles.buttonText}>Goal</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
@@ -251,7 +271,7 @@ function Profile({ navigation }) {
               <Text style={styles.buttonText}>Reports</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Gamification</Text>
+              <Text style={styles.buttonText}>Progress</Text>
             </TouchableOpacity>
           </View>
         </View>
