@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   button: {
-    backgroundColor: '#673AB7',
+    backgroundColor: '#2D144B',
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
@@ -115,13 +115,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   forgotPassword: {
-    color: '#673AB7',
+    color: '#2D144B',
     fontSize: 16,
     marginTop: 10,
     alignSelf: 'center',
   },
   signUp: {
-    color: '#673AB7',
+    color: '#2D144B',
     fontSize: 16,
     marginTop: 10,
     alignSelf: 'center',
