@@ -223,7 +223,7 @@ const App = () => {
                 // console.log("date_equal", label);
                 // console.log("total value", total);
                 // console.log("parse", entry.moneyAdded);
-                return total + parseFloat(entry.moneyAdded);
+                return total + parseInt(entry.moneyAdded, 0);
               } else {
                 // console.log("date1",entryDate);
                 // console.log("date2",label);
@@ -263,7 +263,7 @@ const App = () => {
               const entryDate = new Date(entry.date);
               if (entryDate.getFullYear() === monthDate.getFullYear() && entryDate.getMonth() === monthDate.getMonth()) {
 
-                return total + parseFloat(entry.moneyAdded);
+                return total + parseInt(entry.moneyAdded, 0);
 
               } else {
                 // console.log("month1",entryDate.getFullYear());
