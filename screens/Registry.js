@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, TextInput, Text, TouchableOpacity, Alert, Image, Dimensions } from 'react-native';
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { auth } from '../components/firebaseConfig';
 import { useAuth } from '../components/AuthContext';
@@ -35,7 +35,10 @@ const Register = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-        <Text style={styles.logoText}>Logo</Text>
+        <Image
+          source = {require('../assets/Joyful Savings Jar 4.png')}
+          style={styles.logoImage}
+        />
       </View>
       <Text style={styles.title}>Sign Up</Text>
       <TextInput
@@ -82,6 +85,11 @@ const styles = StyleSheet.create({
     marginBottom: 50,
     backgroundColor: '#E91E63',
     borderRadius: 80,
+    overflow: 'hidden',
+  },
+  logoImage: {
+    width: '100%',
+    height: '100%',
   },
   logoText: {
     fontSize: 24,
@@ -104,7 +112,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   button: {
-    backgroundColor: '#673AB7',
+    backgroundColor: '#2D144B',
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
@@ -115,7 +123,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   signUp: {
-    color: '#673AB7',
+    color: '#2D144B',
     fontSize: 16,
     marginTop: 10,
     alignSelf: 'center',
