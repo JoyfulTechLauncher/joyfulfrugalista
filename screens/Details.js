@@ -8,16 +8,17 @@ import { useFocusEffect } from '@react-navigation/native';
 import { categories } from '../screens/addPage'
 
 function Detail({ navigation }) {
-
   const route = useRoute();
   const [dateIndex, setDateIndex] = useState(0);
-  const [dataType, setDataType] = useState('saving'); // 'saving', 'expense', 'income'
+  const [dataType, setDataType] = useState("saving"); // 'saving', 'expense', 'income'
   const { currentUser } = useAuth();
-  const [fetchedData, setFetchedData] = useState({ savingEntries: [], totalSaved: 0 });
+  const [fetchedData, setFetchedData] = useState({
+    savingEntries: [],
+    totalSaved: 0,
+  });
   const [totalSavingAmount, setTotalSavingAmount] = useState(0);
   const [dailySavingAmount, setDailySavingAmount] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
-
 
   // Function to get today's date in the format: "March 23, 2024"
   const getDate = (dateIndex) => {
@@ -27,7 +28,7 @@ function Detail({ navigation }) {
 
     // Get year, month, and day components from the target date
     const year = targetDate.getFullYear();
-    const month = targetDate.getMonth() + 1; 
+    const month = targetDate.getMonth() + 1;
     const day = targetDate.getDate();
 
     // Format the date components with leading zeros if necessary
@@ -58,14 +59,14 @@ function Detail({ navigation }) {
   };
 
   const handleNext = () => {
-    const today = new Date(); 
-      const nextDate = new Date(getDate(dateIndex + 1)); 
-      if (nextDate <= today) { 
-      setDateIndex(dateIndex + 1); 
-      fetchDataAndUpdate(); 
+    const today = new Date();
+    const nextDate = new Date(getDate(dateIndex + 1));
+    if (nextDate <= today) {
+      setDateIndex(dateIndex + 1);
+      fetchDataAndUpdate();
     }
   };
-  
+
   useEffect(() => {
     if (!isMounted) {
       setDateIndex(0);
@@ -108,33 +109,35 @@ function Detail({ navigation }) {
           setFetchedData(currentData);
         })
         .catch((error) => {
-          console.error('Error fetching saving data:', error);
+          console.error("Error fetching saving data:", error);
         });
     } else {
       console.log('User is not logged in');
     }
   };
 
-    // Function to categorize saving entries by dates
-const categorizeSavingEntries = (savingEntries) => {
-  const categorizedData = {};
-  Object.values(savingEntries.savingEntries).forEach((entry) => {
-    const { date } = entry;
-    if (categorizedData[date]) {
-      categorizedData[date].push(entry);
-    } else {
-      categorizedData[date] = [entry];
-    }
-  });
-  return categorizedData;
-};
+  // Function to categorize saving entries by dates
+  const categorizeSavingEntries = (savingEntries) => {
+    const categorizedData = {};
+    Object.values(savingEntries.savingEntries).forEach((entry) => {
+      const { date } = entry;
+      if (categorizedData[date]) {
+        categorizedData[date].push(entry);
+      } else {
+        categorizedData[date] = [entry];
+      }
+    });
+    return categorizedData;
+  };
 
-const formatDateString = (dateString) => {
-  const [year, month, day] = dateString.split('-').map((component) => parseInt(component));
-  const formattedMonth = month.toString();
-  const formattedDay = day.toString();
-  return `${year}-${formattedMonth}-${formattedDay}`;
-};
+  const formatDateString = (dateString) => {
+    const [year, month, day] = dateString
+      .split("-")
+      .map((component) => parseInt(component));
+    const formattedMonth = month.toString();
+    const formattedDay = day.toString();
+    return `${year}-${formattedMonth}-${formattedDay}`;
+  };
 
 // Function to get entries for a specific date from categorized data
 const getEntriesForDate = (categorizedData, date) => {
@@ -148,8 +151,8 @@ const getEntriesForDate = (categorizedData, date) => {
   }
 };
 
-const calculateDailySavingAmount = (currentData) => {
-  let savingAmount = 0;
+  const calculateDailySavingAmount = (currentData) => {
+    let savingAmount = 0;
 
   // Iterate over each entry in currentData
   currentData.forEach((entry) => {
@@ -162,195 +165,217 @@ const calculateDailySavingAmount = (currentData) => {
   // Render the component's UI
   return (
     <View style={styles.container}>
-    <View style={styles.header}>
-      <TouchableOpacity onPress={handlePrevious} style={styles.navButton}>
-        <Text style={styles.navButtonText}>{"<"}</Text>
-      </TouchableOpacity>
-      <Text style={styles.dateText}>{getDate(dateIndex)}</Text>
-      <TouchableOpacity onPress={handleNext} style={styles.navButton}>
-        <Text style={styles.navButtonText}>{">"}</Text>
-      </TouchableOpacity>
-    </View>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={handlePrevious} style={styles.navButton}>
+          <Text style={styles.navButtonText}>{"<"}</Text>
+        </TouchableOpacity>
+        <Text style={styles.dateText}>{getDate(dateIndex)}</Text>
+        <TouchableOpacity onPress={handleNext} style={styles.navButton}>
+          <Text style={styles.navButtonText}>{">"}</Text>
+        </TouchableOpacity>
+      </View>
 
-    <View style={styles.mainButtons}>
-      <TouchableOpacity onPress={() => {handleDataChange('saving')}} style={getButtonStyle('saving')}>
-        <Text style={getButtonTextColor('saving')}>Saving Records</Text>
-      </TouchableOpacity>
-    </View>
+      <View style={styles.mainButtons}>
+        <TouchableOpacity
+          onPress={() => {
+            handleDataChange("saving");
+          }}
+          style={getButtonStyle("saving")}
+        >
+          <Text style={getButtonTextColor("saving")}>Saving Records</Text>
+        </TouchableOpacity>
+      </View>
 
-    <View style={styles.content}>
-      <View>
+      <View style={styles.content}>
+        <View>
           <View style={styles.board}>
             <Text style={styles.boardLabel}>You have saved</Text>
             <Text style={styles.amount}>${totalSavingAmount}</Text>
           </View>
           <View style={styles.subBoard}>
-            <Text style={styles.subBoardLabel}>You saved ${dailySavingAmount} today !</Text>
+            <Text style={styles.subBoardLabel}>
+              You saved ${dailySavingAmount} today !
+            </Text>
           </View>
         </View>
-      <ScrollView style={styles.scrollView}>
-        <View>
-          <Text style={styles.dateTextForData}>{getDate(dateIndex)}</Text>
-          {fetchedData ? (
-            Object.keys(fetchedData).map((key, index) => {
-              const { date, category, moneyAdded, description } = fetchedData[key];
-              const categoryInfo = categories.find((item) => item.id === category);
-              const displayText = description?.trim() ? `${category}: ${description}` : category;
-              if (!categoryInfo) return null; // Skip if category not found
-              return(
-                <View key={index}>
-                <View style={styles.dataContainer}>
-                  <View style={[styles.data, { backgroundColor: categoryInfo.color }]}>
-                    <Image source={categoryInfo.iconName} style={styles.dataIcon} />
-                    <View style={styles.dataText}>
-                      <Text style={styles.dataLabel}>{displayText}</Text>
-                      <Text style={styles.dataAmount}>${moneyAdded}</Text>
+        <ScrollView style={styles.scrollView}>
+          <View>
+            <Text style={styles.dateTextForData}>{getDate(dateIndex)}</Text>
+            {fetchedData ? (
+              Object.keys(fetchedData).map((key, index) => {
+                const { date, category, moneyAdded, description } =
+                  fetchedData[key];
+                const categoryInfo = categories.find(
+                  (item) => item.id === category
+                );
+                const displayText = description?.trim()
+                  ? `${category}: ${description}`
+                  : category;
+                if (!categoryInfo) return null; // Skip if category not found
+                return (
+                  <View key={index}>
+                    <View style={styles.dataContainer}>
+                      <View
+                        style={[
+                          styles.data,
+                          { backgroundColor: categoryInfo.color },
+                        ]}
+                      >
+                        <Image
+                          source={categoryInfo.iconName}
+                          style={styles.dataIcon}
+                        />
+                        <View style={styles.dataText}>
+                          <Text style={styles.dataLabel}>{displayText}</Text>
+                          <Text style={styles.dataAmount}>${moneyAdded}</Text>
+                        </View>
+                      </View>
                     </View>
                   </View>
-                </View>
-              </View>
-            );
-          })
-          ) : (
-            <Text>No data available</Text>
-          )}
-        </View>
-      </ScrollView>
-
+                );
+              })
+            ) : (
+              <Text>No data available</Text>
+            )}
+          </View>
+        </ScrollView>
       </View>
-    <TouchableOpacity onPress={() => navigation.navigate("   ", { screen: "AddPage" })} style={styles.addButton}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("   ", { screen: "AddPage" })}
+        style={styles.addButton}
+      >
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
-  </View>
+    </View>
   );
-};
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2d144b',
+    backgroundColor: "#2d144b",
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     margin: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   navButton: {
     paddingVertical: 3,
     paddingHorizontal: 15,
-    backgroundColor: '#603a6b',
+    backgroundColor: "#603a6b",
   },
   navButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 15,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   dateText: {
     fontSize: 15,
-    color: '#2d144b',
+    color: "#2d144b",
   },
   mainButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 10,
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
   activeButton: {
     flex: 1,
-    backgroundColor: '#603a6b',
+    backgroundColor: "#603a6b",
     paddingVertical: 10,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 5,
     marginHorizontal: 1,
   },
   activeButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 15,
   },
   button: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     paddingVertical: 10,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 5,
     marginHorizontal: 1,
   },
   buttonText: {
-    color: '#2d144b',
+    color: "#2d144b",
     fontSize: 15,
   },
   content: {
     flex: 1,
-    backgroundColor: '#fff',
-    width: '100%',
+    backgroundColor: "#fff",
+    width: "100%",
     marginTop: 10,
     marginBottom: 0,
   },
   addButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 20,
     right: 20,
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#f2c875',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#f2c875",
+    justifyContent: "center",
+    alignItems: "center",
   },
   addButtonText: {
-    color: '#2d144b',
+    color: "#2d144b",
     fontSize: 30,
   },
   board: {
-    backgroundColor: '#f2c875',
+    backgroundColor: "#f2c875",
     padding: 5,
-    borderTopLeftRadius: 10, 
+    borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     margin: 10,
     marginBottom: 0,
-    alignItems: 'center',
+    alignItems: "center",
     height: 120,
   },
   boardLabel: {
-    color: '#2d144b',
+    color: "#2d144b",
     lineHeight: 50,
   },
   amount: {
-    color: '#2d144b',
+    color: "#2d144b",
     lineHeight: 35,
     fontSize: 30,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   subBoard: {
-    backgroundColor: '#2d144b',
+    backgroundColor: "#2d144b",
     padding: 10,
-    borderBottomLeftRadius: 10, 
+    borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
     marginHorizontal: 10,
     marginTop: 0,
     marginBottom: 10,
-    alignItems: 'left',
+    alignItems: "left",
     height: 40,
   },
   subBoardLabel: {
     fontSize: 15,
-    color: '#f2c875',
+    color: "#f2c875",
     marginLeft: 10,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   dataContainer: {
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingHorizontal: 10,
   },
   dateTextForData: {
     fontSize: 15,
-    color: '#2d144b',
+    color: "#2d144b",
     margin: 10,
   },
   data: {
-    alignItems: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    flexDirection: "row",
     //backgroundColor: '#F1EBF2',
     marginTop: 5,
     marginBottom: 5,
@@ -365,18 +390,17 @@ const styles = StyleSheet.create({
   },
   dataText: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   dataLabel: {
-    color: '#2d144b',
+    color: "#2d144b",
     fontSize: 15,
   },
   dataAmount: {
-    color: '#2d144b',
+    color: "#2d144b",
     fontSize: 15,
-    
-  }
+  },
 });
 
 export default Detail;

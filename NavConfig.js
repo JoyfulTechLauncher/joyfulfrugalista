@@ -7,10 +7,12 @@ import Details from "./screens/Details";
 import Summary from "./screens/Summary";
 import AddPage from "./screens/addPage";
 import Community from "./screens/Community";
-import Registry from "./screens/Registry"
+import Registry from "./screens/Registry";
 import Login from "./screens/Login";
 import Profile from "./screens/Profile";
 import ForgetPassword from "./screens/ForgetPassword";
+import ProfileEdit from "./screens/ProfileEdit";
+
 import {
   Octicons,
   Fontisto,
@@ -88,26 +90,31 @@ function MyTabs() {
 function MyStack() {
   return (
     <Stack.Navigator>
-        <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{ headerShown: false }}
-        />
-        <Stack.Screen
-            name="AddPage"
-            component={AddPage}
-            options={{ headerShown: false }}
-        />
-        <Stack.Screen
-            name="Registry"
-            component={Registry}
-            options={{ headerShown: false }}
-        />
-        <Stack.Screen
-            name="ForgetPassword"
-            component={ForgetPassword}
-            options={{ headerShown: false }}
-        />
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AddPage"
+        component={AddPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Registry"
+        component={Registry}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ForgetPassword"
+        component={ForgetPassword}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ProfileEdit"
+        component={ProfileEdit}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }
@@ -115,6 +122,11 @@ function MyStack() {
 function AppNav() {
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{ headerShown: false }} // 可以选择隐藏登录页的头部
+      />
       <Stack.Screen
         name="Tab"
         component={MyTabs}
