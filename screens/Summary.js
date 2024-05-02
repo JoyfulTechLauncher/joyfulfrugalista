@@ -333,20 +333,6 @@ const App = () => {
 
   const topButtonStyle = {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingVertical: 10,
-    alignItems: 'center',
-    borderRadius: 5,
-    marginHorizontal: 1,
-  };
-
-  const topButtonText = {
-    color: '#2d144b',
-    fontSize: 14,
-  };
-
-  const activeButton = {
-    flex: 1,
     backgroundColor: '#603a6b',
     paddingVertical: 10,
     alignItems: 'center',
@@ -354,8 +340,22 @@ const App = () => {
     marginHorizontal: 1,
   };
 
-  const activeButtonText = {
+  const topButtonText = {
     color: '#fff',
+    fontSize: 14,
+  };
+
+  const activeButton = {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderRadius: 5,
+    marginHorizontal: 1,
+  };
+
+  const activeButtonText = {
+    color: '#2d144b',
     fontSize: 14,
   };
 
