@@ -299,16 +299,22 @@ const App = () => {
       setLoading(false);
   };
 
-  const handleNext = () => {
-
-    setPeriodIndex(periodIndex + 1);
-
+  const handleNext = (timePeriod) => {
+    if (timePeriod === 'Year') {
+      setPeriodIndex(periodIndex + 1);
+    } else if (timePeriod === 'Week') {
+      setPeriodIndex(Math.max(0, periodIndex - 1));
+    }
   };
 
-  const handlePrevious = () => {
+  const handlePrevious = (timePeriod) => {
 
-    setPeriodIndex(Math.max(0, periodIndex - 1));
-
+      //setPeriodIndex(Math.max(0, periodIndex - 1));
+    if (timePeriod === 'Week') {
+      setPeriodIndex(periodIndex + 1);
+    } else if (timePeriod === 'Year') {
+      setPeriodIndex(Math.max(0, periodIndex - 1));
+    }
   };
 
   const calculateTotalSavingForWeek = () => {
@@ -376,7 +382,7 @@ const App = () => {
         </View>
       </View>
       <View style={styles.navigationContainer}>
-        <TouchableOpacity style={styles.buttonStyle} onPress={handlePrevious}>
+        <TouchableOpacity style={styles.buttonStyle} onPress={() => handlePrevious(timePeriod)}>
           <Text style={styles.buttonText}>&lt;</Text>
           </TouchableOpacity>
           {timePeriod === 'Week' ? (
@@ -384,7 +390,7 @@ const App = () => {
           ) : (
             <Text style={styles.periodText}>{periodIndex}</Text>
           )}
-        <TouchableOpacity style={styles.buttonStyle} onPress={handleNext}>
+        <TouchableOpacity style={styles.buttonStyle} onPress={() => handleNext(timePeriod)}>
           <Text style={styles.buttonText}>&gt;</Text>
         </TouchableOpacity>
       </View>
