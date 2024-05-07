@@ -1,5 +1,14 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Text, TouchableOpacity, Alert, Image, Dimensions } from 'react-native';
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  Text,
+  TouchableOpacity,
+  Alert,
+  Image,
+  Dimensions,
+} from "react-native";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../components/firebaseConfig";
 import { useAuth } from "../components/AuthContext";
@@ -16,9 +25,9 @@ const Login = ({ navigation }) => {
         uid = userCredential.user.uid;
         setUser({ uid: userCredential.user.uid });
         console.log("User UID:", uid);
-          navigation.navigate('Tab', {
-              screen: 'Details',
-          });
+        navigation.navigate("Tab", {
+          screen: "Details",
+        });
       })
       .catch((error) => {
         Alert.alert("Login failed", error.message);
@@ -29,7 +38,7 @@ const Login = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.logoContainer}>
         <Image
-          source = {require('../assets/Joyful Savings Jar 4.png')}
+          source={require("../assets/Joyful Savings Jar 4.png")}
           style={styles.logoImage}
         />
       </View>
@@ -53,10 +62,14 @@ const Login = ({ navigation }) => {
         <Text style={styles.buttonText}>Sign in</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate("ForgetPassword")}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("   ", { screen: "ForgetPassword" })}
+      >
         <Text style={styles.forgotPassword}>Forgot password</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("Registry")}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("   ", { screen: "Registry" })}
+      >
         <Text style={styles.signUp}>Sign up</Text>
       </TouchableOpacity>
     </View>
@@ -74,17 +87,17 @@ const styles = StyleSheet.create({
   logoContainer: {
     width: 160,
     height: 160,
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 50,
-    backgroundColor: '#E91E63',
+    backgroundColor: "#E91E63",
     borderRadius: 80,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   logoImage: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   title: {
     fontSize: 26,
@@ -102,7 +115,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   button: {
-    backgroundColor: '#2D144B',
+    backgroundColor: "#2D144B",
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: "center",
@@ -113,13 +126,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   forgotPassword: {
-    color: '#2D144B',
+    color: "#2D144B",
     fontSize: 16,
     marginTop: 10,
     alignSelf: "center",
   },
   signUp: {
-    color: '#2D144B',
+    color: "#2D144B",
     fontSize: 16,
     marginTop: 10,
     alignSelf: "center",
