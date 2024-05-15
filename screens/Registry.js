@@ -16,7 +16,7 @@ const Register = ({ navigation }) => {
         setUser({ uid: userCredential.user.uid })
         sendVerificationEmail(userCredential.user);
         Alert.alert("Registration Successful", "You are now registered and logged in. Please check your email to verify your account.");
-        navigation.navigate('MyTabs'); // Assuming you want to navigate to 'MyTabs' after registration
+        navigation.goBack();
       })
       .catch((error) => {
         Alert.alert("Registration failed", error.message);

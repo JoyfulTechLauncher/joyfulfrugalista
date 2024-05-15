@@ -53,10 +53,10 @@ const Login = ({ navigation }) => {
         <Text style={styles.buttonText}>Sign in</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate("ForgetPassword")}>
+      <TouchableOpacity onPress={() => navigation.navigate("   ", { screen: "ForgetPassword" })}>
         <Text style={styles.forgotPassword}>Forgot password</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("Registry")}>
+      <TouchableOpacity onPress={() => navigation.navigate("   ", { screen: "Registry" })}>
         <Text style={styles.signUp}>Sign up</Text>
       </TouchableOpacity>
     </View>

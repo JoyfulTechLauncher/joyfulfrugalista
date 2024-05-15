@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Joyful24",
+    "name": "JoyfulSavingJar",
     "slug": "Joyful24",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "Joyful.Saving_Jar"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "af97d6f2-d2cb-403b-985c-38a87fc873ee"
+      }
     }
   }
 }
