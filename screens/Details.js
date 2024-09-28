@@ -1,11 +1,14 @@
-import { StyleSheet,View, Text, TouchableOpacity, Image, Platform} from "react-native";
-import React, { useState, useEffect  } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Image, Modal, TextInput, Alert, Platform } from "react-native";
+import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { fetchSavingData } from '../components/FirebaseDatabase';
+import { fetchSavingData, updateEntryInDatabase } from '../components/FirebaseDatabase';
 import { useAuth } from '../components/AuthContext';
 import { useFocusEffect } from '@react-navigation/native';
-import { categories } from '../screens/addPage'
+import { categories } from '../screens/addPage';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { deleteEntryFromDatabase } from '../components/FirebaseDatabase';
+
 
 function Detail({ navigation }) {
   const route = useRoute();
@@ -20,7 +23,16 @@ function Detail({ navigation }) {
   const [dailySavingAmount, setDailySavingAmount] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
 
-  // Function to get today's date in the format: "March 23, 2024"
+  // 新增状态变量
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editingEntryId, setEditingEntryId] = useState(null);
+  const [editingDate, setEditingDate] = useState(new Date());
+  const [editingMoneyAdded, setEditingMoneyAdded] = useState('');
+  const [editingCategory, setEditingCategory] = useState(null);
+  const [editingDescription, setEditingDescription] = useState('');
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  // Function to get today's date in the format: "yyyy-mm-dd"
   const getDate = (dateIndex) => {
     const currentDate = new Date();
     const targetDate = new Date(currentDate);
@@ -91,7 +103,7 @@ function Detail({ navigation }) {
         setDateIndex(0);
         fetchDataAndUpdate();
         // No cleanup action needed, but you could return a cleanup function if necessary
-        return () => {};
+        return () => { };
       }, [currentUser])
   );
 
@@ -100,17 +112,17 @@ function Detail({ navigation }) {
     if (currentUser && currentUser.uid) {
       // Fetch saving data from the database using the user's UID
       fetchSavingData(currentUser.uid)
-        .then((data) => {
-          setTotalSavingAmount(data.totalSaved);
-          const categorizedData = categorizeSavingEntries(data);
-          console.log(categorizedData)
-          const currentData = getEntriesForDate(categorizedData, getDate(dateIndex));
-          setDailySavingAmount(calculateDailySavingAmount(currentData));
-          setFetchedData(currentData);
-        })
-        .catch((error) => {
-          console.error("Error fetching saving data:", error);
-        });
+          .then((data) => {
+            setTotalSavingAmount(data.totalSaved);
+            const categorizedData = categorizeSavingEntries(data);
+            console.log(categorizedData)
+            const currentData = getEntriesForDate(categorizedData, getDate(dateIndex));
+            setDailySavingAmount(calculateDailySavingAmount(currentData));
+            setFetchedData(currentData);
+          })
+          .catch((error) => {
+            console.error("Error fetching saving data:", error);
+          });
     } else {
       console.log('User is not logged in');
     }
@@ -119,134 +131,281 @@ function Detail({ navigation }) {
   // Function to categorize saving entries by dates
   const categorizeSavingEntries = (savingEntries) => {
     const categorizedData = {};
-    Object.values(savingEntries.savingEntries).forEach((entry) => {
+    Object.entries(savingEntries.savingEntries).forEach(([entryId, entry]) => {
       const { date } = entry;
       if (categorizedData[date]) {
-        categorizedData[date].push(entry);
+        categorizedData[date].push({ ...entry, id: entryId });
       } else {
-        categorizedData[date] = [entry];
+        categorizedData[date] = [{ ...entry, id: entryId }];
       }
     });
     return categorizedData;
   };
 
-  const formatDateString = (dateString) => {
-    const [year, month, day] = dateString
-      .split("-")
-      .map((component) => parseInt(component));
-    const formattedMonth = month.toString();
-    const formattedDay = day.toString();
-    return `${year}-${formattedMonth}-${formattedDay}`;
+  const formatDateString = (dateString) => dateString;
+
+
+  // Function to get entries for a specific date from categorized data
+  const getEntriesForDate = (categorizedData, date) => {
+    if (categorizedData[date]) {
+      return categorizedData[date];
+    } else {
+      return [];
+    }
   };
 
-// Function to get entries for a specific date from categorized data
-const getEntriesForDate = (categorizedData, date) => {
-  // Check if the date exists as a key in categorizedData
-  const reformattedDate = formatDateString(date);
-  if (categorizedData[reformattedDate]) {
-    // If it exists, return the entries for that date
-    return categorizedData[reformattedDate];
-  } else {
-    return [];
-  }
-};
 
   const calculateDailySavingAmount = (currentData) => {
     let savingAmount = 0;
 
-  // Iterate over each entry in currentData
-  currentData.forEach((entry) => {
-    const moneyAdded = parseInt(entry.moneyAdded);
-    savingAmount += moneyAdded;
-  });
-  return savingAmount;
-};
+    // Iterate over each entry in currentData
+    currentData.forEach((entry) => {
+      const moneyAdded = parseInt(entry.moneyAdded);
+      savingAmount += moneyAdded;
+    });
+    return savingAmount;
+  };
+
+  // 点击记录，弹出编辑弹窗
+  const handleRecordPress = (entry) => {
+    setEditingEntryId(entry.id);
+    setEditingDate(new Date(entry.date));
+    setEditingMoneyAdded(entry.moneyAdded.toString());
+    setEditingCategory(entry.category);
+    setEditingDescription(entry.description);
+    setIsModalVisible(true);
+  };
+
+  // 保存修改
+  const handleSaveChanges = () => {
+    if (!editingEntryId) return;
+
+    const updatedData = {
+      date: formatDateForDatabase(editingDate),
+      moneyAdded: editingMoneyAdded.toString(),  // 确保 moneyAdded 以字符串格式存储
+      category: editingCategory,
+      description: editingDescription,
+    };
+
+    updateEntryInDatabase(currentUser.uid, editingEntryId, updatedData)
+        .then(() => {
+          Alert.alert("Record updated successfully!");
+          setIsModalVisible(false);
+          fetchDataAndUpdate();
+        })
+        .catch((error) => {
+          console.error('Error updating record:', error);
+          Alert.alert("Error", error.message);
+        });
+  };
+
+  const formatDateForDatabase = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+
+    const formattedMonth = month < 10 ? `0${month}` : `${month}`;
+    const formattedDay = day < 10 ? `0${day}` : `${day}`;
+
+    return `${year}-${formattedMonth}-${formattedDay}`;
+  };
+
+  // 删除记录的函数
+  const handleDeleteRecord = () => {
+    if (!editingEntryId) return;
+
+    deleteEntryFromDatabase(currentUser.uid, editingEntryId)
+        .then(() => {
+          Alert.alert("Record deleted successfully!");
+          setIsModalVisible(false);
+          fetchDataAndUpdate(); // 重新获取数据并刷新页面
+        })
+        .catch((error) => {
+          console.error('Error deleting record:', error);
+          Alert.alert("Error", error.message);
+        });
+  };
+
+
+  const showDatepicker = () => {
+    setShowDatePicker(true);
+  };
+
+  const onDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || editingDate;
+    setShowDatePicker(false);
+    setEditingDate(currentDate);
+  };
 
   // Render the component's UI
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={handlePrevious} style={styles.navButton}>
-          <Text style={styles.navButtonText}>{"<"}</Text>
-        </TouchableOpacity>
-        <Text style={styles.dateText}>{getDate(dateIndex)}</Text>
-        <TouchableOpacity onPress={handleNext} style={styles.navButton}>
-          <Text style={styles.navButtonText}>{">"}</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.mainButtons}>
-        <TouchableOpacity
-          onPress={() => {
-            handleDataChange("saving");
-          }}
-          style={getButtonStyle("saving")}
-        >
-          <Text style={getButtonTextColor("saving")}>Saving Records</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.content}>
-        <View>
-          <View style={styles.board}>
-            <Text style={styles.boardLabel}>You have saved</Text>
-            <Text style={styles.amount}>${totalSavingAmount}</Text>
-          </View>
-          <View style={styles.subBoard}>
-            <Text style={styles.subBoardLabel}>
-              You saved ${dailySavingAmount} today !
-            </Text>
-          </View>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={handlePrevious} style={styles.navButton}>
+            <Text style={styles.navButtonText}>{"<"}</Text>
+          </TouchableOpacity>
+          <Text style={styles.dateText}>{getDate(dateIndex)}</Text>
+          <TouchableOpacity onPress={handleNext} style={styles.navButton}>
+            <Text style={styles.navButtonText}>{">"}</Text>
+          </TouchableOpacity>
         </View>
-        <ScrollView style={styles.scrollView}>
+
+        <View style={styles.mainButtons}>
+          <TouchableOpacity
+              onPress={() => {
+                handleDataChange("saving");
+              }}
+              style={getButtonStyle("saving")}
+          >
+            <Text style={getButtonTextColor("saving")}>Saving Records</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.content}>
           <View>
-            <Text style={styles.dateTextForData}>{getDate(dateIndex)}</Text>
-            {fetchedData ? (
-              Object.keys(fetchedData).map((key, index) => {
-                const { date, category, moneyAdded, description } =
-                  fetchedData[key];
-                const categoryInfo = categories.find(
-                  (item) => item.id === category
-                );
-                const displayText = description?.trim()
-                  ? `${category}: ${description}`
-                  : category;
-                if (!categoryInfo) return null; // Skip if category not found
-                return (
-                  <View key={index}>
-                    <View style={styles.dataContainer}>
-                      <View
-                        style={[
-                          styles.data,
-                          { backgroundColor: categoryInfo.color },
-                        ]}
-                      >
-                        <Image
-                          source={categoryInfo.iconName}
-                          style={styles.dataIcon}
-                        />
-                        <View style={styles.dataText}>
-                          <Text style={styles.dataLabel}>{displayText}</Text>
-                          <Text style={styles.dataAmount}>${moneyAdded}</Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                );
-              })
-            ) : (
-              <Text>No data available</Text>
-            )}
+            <View style={styles.board}>
+              <Text style={styles.boardLabel}>You have saved</Text>
+              <Text style={styles.amount}>${totalSavingAmount}</Text>
+            </View>
+            <View style={styles.subBoard}>
+              <Text style={styles.subBoardLabel}>
+                You saved ${dailySavingAmount} today!
+              </Text>
+            </View>
           </View>
-        </ScrollView>
+          <ScrollView style={styles.scrollView}>
+            <View>
+              <Text style={styles.dateTextForData}>{getDate(dateIndex)}</Text>
+              {fetchedData && fetchedData.length > 0 ? (
+                  fetchedData.map((entry, index) => {
+                    const { date, category, moneyAdded, description } = entry;
+                    const categoryInfo = categories.find(
+                        (item) => item.id === category
+                    );
+                    const displayText = description?.trim()
+                        ? `${category}: ${description}`
+                        : category;
+                    if (!categoryInfo) return null; // Skip if category not found
+                    return (
+                        <View key={index}>
+                          <TouchableOpacity onPress={() => handleRecordPress(entry)}>
+                            <View style={styles.dataContainer}>
+                              <View
+                                  style={[
+                                    styles.data,
+                                    { backgroundColor: categoryInfo.color },
+                                  ]}
+                              >
+                                <Image
+                                    source={categoryInfo.iconName}
+                                    style={styles.dataIcon}
+                                />
+                                <View style={styles.dataText}>
+                                  <Text style={styles.dataLabel}>{displayText}</Text>
+                                  <Text style={styles.dataAmount}>${moneyAdded}</Text>
+                                </View>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                    );
+                  })
+              ) : (
+                  <Text>No data available</Text>
+              )}
+            </View>
+          </ScrollView>
+        </View>
+        <TouchableOpacity
+            onPress={() => navigation.navigate("   ", { screen: "AddPage" })}
+            style={styles.addButton}
+        >
+          <Text style={styles.addButtonText}>+</Text>
+        </TouchableOpacity>
+
+        {/* 编辑弹窗 */}
+        <Modal
+            visible={isModalVisible}
+            animationType="slide"
+            transparent={true}
+            onRequestClose={() => setIsModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Edit Record</Text>
+
+              {/* 日期选择 */}
+              <TouchableOpacity onPress={showDatepicker} style={styles.datePickerButton}>
+                <Text style={styles.datePickerButtonText}>Select Date: {formatDateForDatabase(editingDate)}</Text>
+              </TouchableOpacity>
+              {showDatePicker && (
+                  <DateTimePicker
+                      value={editingDate}
+                      mode="date"
+                      display="default"
+                      onChange={onDateChange}
+                  />
+              )}
+
+              {/* 金额输入 */}
+              <TextInput
+                  style={styles.input}
+                  placeholder="Amount"
+                  keyboardType="numeric"
+                  value={editingMoneyAdded}
+                  onChangeText={setEditingMoneyAdded}
+              />
+
+              {/* 分类选择 */}
+              <ScrollView horizontal style={styles.categoryScroll}>
+                {categories.map((category) => (
+                    <TouchableOpacity
+                        key={category.id}
+                        style={[
+                          styles.categoryButton,
+                          editingCategory === category.id && { borderColor: '#2d144b', borderWidth: 2 },
+                        ]}
+                        onPress={() => setEditingCategory(category.id)}
+                    >
+                      <Image source={category.iconName} style={styles.categoryIcon} />
+                      <Text style={styles.categoryText}>{category.title}</Text>
+                    </TouchableOpacity>
+                ))}
+              </ScrollView>
+
+              {/* 描述输入 */}
+              <TextInput
+                  style={styles.input}
+                  placeholder="Description"
+                  value={editingDescription}
+                  onChangeText={setEditingDescription}
+              />
+
+              {/* 按钮 */}
+              <View style={styles.modalButtons}>
+                <TouchableOpacity
+                    onPress={handleDeleteRecord} // 调用删除函数
+                    style={styles.deleteButton}
+                >
+                  <Text style={styles.buttonTextModal}>Delete</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => setIsModalVisible(false)}
+                    style={styles.cancelButton}
+                >
+                  <Text style={styles.buttonTextModal}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={handleSaveChanges}
+                    style={styles.saveButton}
+                >
+                  <Text style={styles.buttonTextModal}>Save</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("   ", { screen: "AddPage" })}
-        style={styles.addButton}
-      >
-        <Text style={styles.addButtonText}>+</Text>
-      </TouchableOpacity>
-    </View>
   );
 }
 const styles = StyleSheet.create({
@@ -401,6 +560,88 @@ const styles = StyleSheet.create({
     color: "#2d144b",
     fontSize: 15,
   },
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '90%',
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+  },
+  modalTitle: {
+    fontSize: 20,
+    color: "#2d144b",
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  input: {
+    borderColor: '#2d144b',
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 5,
+  },
+  datePickerButton: {
+    padding: 10,
+    backgroundColor: '#f2c875',
+    borderRadius: 5,
+    marginVertical: 5,
+  },
+  datePickerButtonText: {
+    color: '#2d144b',
+    textAlign: 'center',
+  },
+  categoryScroll: {
+    marginVertical: 5,
+  },
+  categoryButton: {
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  categoryIcon: {
+    width: 40,
+    height: 40,
+  },
+  categoryText: {
+    fontSize: 12,
+    color: '#2d144b',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  cancelButton: {
+    backgroundColor: '#ccc',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    marginRight: 5,
+  },
+  saveButton: {
+    backgroundColor: '#2d144b',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    marginLeft: 5,
+  },
+  buttonTextModal: {
+    color: '#fff',
+    textAlign: 'center',
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    marginRight: 5,
+  },
+
 });
 
 export default Detail;

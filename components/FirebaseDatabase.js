@@ -1,4 +1,4 @@
-import { getDatabase, ref, push, get, set } from 'firebase/database'
+import { getDatabase, ref, push, get, set, remove } from 'firebase/database'
 
 
 export const addEntryToDatabase = (uid, date, moneyAdded, category, description) => {
@@ -21,6 +21,23 @@ export const addEntryToDatabase = (uid, date, moneyAdded, category, description)
       });
     });
   };
+
+// Function to update an existing entry in the database
+export const updateEntryInDatabase = (uid, entryId, updatedData) => {
+  return new Promise((resolve, reject) => {
+    const database = getDatabase();
+    const entryRef = ref(database, `addInfo/${uid}/${entryId}`);
+
+    // Update the entry with the new data
+    set(entryRef, updatedData)
+        .then(() => {
+          resolve(); // Resolve the promise when data is successfully updated
+        })
+        .catch((error) => {
+          reject(error); // Reject the promise with the error if something goes wrong
+        });
+  });
+};
 
 export const fetchSavingData = (uid) => {
     const database = getDatabase();
@@ -45,3 +62,19 @@ export const fetchSavingData = (uid) => {
     });
   };
 
+// Function to delete an entry from the database
+export const deleteEntryFromDatabase = (uid, entryId) => {
+  return new Promise((resolve, reject) => {
+    const database = getDatabase();
+    const entryRef = ref(database, `addInfo/${uid}/${entryId}`);
+
+    // Remove the entry from the database
+    remove(entryRef)
+        .then(() => {
+          resolve(); // Resolve the promise when the entry is successfully deleted
+        })
+        .catch((error) => {
+          reject(error); // Reject the promise if there's any error
+        });
+  });
+};
